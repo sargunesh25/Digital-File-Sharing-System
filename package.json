@@ -1,7 +1,7 @@
 {
   "scripts": {
     "start": "node backend/server.js",
-    "migrate": "sequelize db:migrate"
+    "migrate": "npx sequelize-cli db:migrate"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",
@@ -17,9 +17,8 @@
     "socket.io": "^4.8.3",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",
-    "uuid": "^13.0.0"
-  },
-  "devDependencies": {
+    "uuid": "^13.0.0",
     "sequelize-cli": "^6.6.5"
-  }
+  },
+  "devDependencies": {}
 }
