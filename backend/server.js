@@ -4,6 +4,7 @@ const dotenv = require('dotenv');
 const http = require('http');
 const { Server } = require('socket.io');
 const { v4: uuidv4 } = require('uuid');
+const swaggerUi = require('swagger-ui-express');
 
 const path = require('path');
 dotenv.config({ path: path.join(__dirname, '.env') });
@@ -11,6 +12,9 @@ dotenv.config({ path: path.join(__dirname, '.env') });
 const app = express();
 const PORT = process.env.PORT || 5000;
 const server = http.createServer(app);
+let activePort = Number(PORT);
+let started = false;
+let retryScheduled = false;
 
 // Socket.IO setup with CORS
 const io = new Server(server, {
@@ -24,12 +28,18 @@ const authRoutes = require('./routers/auth.routes');
 const fileRoutes = require('./routers/file.routes');
 const userRoutes = require('./routers/user.routes');
 const transferRoutes = require('./routers/transfer.routes');
+const swaggerSpec = require('./swagger');
 
 // Middleware
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static('uploads'));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.get('/api-docs.json', (req, res) => {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(swaggerSpec);
+});
 
 // Routes
 app.use('/api/auth', authRoutes);
@@ -169,10 +179,36 @@ db.sequelize.authenticate()
         return db.sequelize.sync({ alter: false });
     })
     .then(() => {
-        server.listen(PORT, '0.0.0.0', () => {
-            console.log(`Server is running on port ${PORT} (all interfaces)`);
-            console.log(`Socket.IO signaling server ready`);
+        const listen = () => {
+            retryScheduled = false;
+            server.listen(activePort, '0.0.0.0', () => {
+                if (started) {
+                    return;
+                }
+                started = true;
+                console.log(`Server is running on port ${activePort} (all interfaces)`);
+                console.log(`Socket.IO signaling server ready`);
+                console.log(`Swagger docs: http://localhost:${activePort}/api-docs`);
+            });
+        };
+
+        server.on('error', (err) => {
+            if (err.code === 'EADDRINUSE') {
+                if (retryScheduled || started) {
+                    return;
+                }
+                console.warn(`Port ${activePort} is in use. Retrying on ${activePort + 1}...`);
+                activePort += 1;
+                retryScheduled = true;
+                setTimeout(listen, 300);
+                return;
+            }
+
+            console.error('HTTP server error:', err);
+            process.exit(1);
         });
+
+        listen();
     })
     .catch(err => {
         console.error('Unable to connect to the database:', err);

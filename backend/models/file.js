@@ -20,7 +20,15 @@ module.exports = (sequelize, DataTypes) => {
     path: DataTypes.STRING,
     mimetype: DataTypes.STRING,
     size: DataTypes.INTEGER,
-    userId: DataTypes.INTEGER
+    userId: DataTypes.INTEGER,
+    isStarred: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
+    },
+    isTrashed: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
+    }
   }, {
     sequelize,
     modelName: 'File',

@@ -148,7 +148,7 @@ exports.completeChunkedUpload = async (req, res) => {
 exports.getFiles = async (req, res) => {
     try {
         const userFiles = await File.findAll({
-            where: { userId: req.user.id }
+            where: { userId: req.user.id, isTrashed: false }
         });
 
         const formattedFiles = userFiles.map(f => ({
@@ -157,7 +157,9 @@ exports.getFiles = async (req, res) => {
             type: f.mimetype,
             size: f.size,
             uploadDate: f.createdAt,
-            path: f.path
+            path: f.path,
+            isStarred: f.isStarred,
+            isTrashed: f.isTrashed
         }));
 
         res.json(formattedFiles);
@@ -263,7 +265,117 @@ exports.shareFile = async (req, res) => {
     }
 };
 
-// ============ Delete File ============
+// ============ Trash and Star Operations ============
+
+exports.toggleStar = async (req, res) => {
+    try {
+        const fileId = parseInt(req.params.id);
+        const file = await File.findOne({
+            where: { id: fileId, userId: req.user.id }
+        });
+
+        if (!file) {
+            return res.status(404).json({ message: 'File not found' });
+        }
+
+        file.isStarred = !file.isStarred;
+        await file.save();
+
+        res.json({ message: 'File star toggled', isStarred: file.isStarred });
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};
+
+exports.moveToTrash = async (req, res) => {
+    try {
+        const fileId = parseInt(req.params.id);
+        const file = await File.findOne({
+            where: { id: fileId, userId: req.user.id }
+        });
+
+        if (!file) {
+            return res.status(404).json({ message: 'File not found' });
+        }
+
+        file.isTrashed = true;
+        // Unstar it if trashed
+        file.isStarred = false;
+        await file.save();
+
+        res.json({ message: 'File moved to trash' });
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};
+
+exports.restoreFromTrash = async (req, res) => {
+    try {
+        const fileId = parseInt(req.params.id);
+        const file = await File.findOne({
+            where: { id: fileId, userId: req.user.id }
+        });
+
+        if (!file) {
+            return res.status(404).json({ message: 'File not found' });
+        }
+
+        file.isTrashed = false;
+        await file.save();
+
+        res.json({ message: 'File restored from trash' });
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};
+
+exports.getStarredFiles = async (req, res) => {
+    try {
+        const userFiles = await File.findAll({
+            where: { userId: req.user.id, isStarred: true, isTrashed: false }
+        });
+
+        const formattedFiles = userFiles.map(f => ({
+            id: f.id,
+            name: f.filename,
+            type: f.mimetype,
+            size: f.size,
+            uploadDate: f.createdAt,
+            path: f.path,
+            isStarred: f.isStarred,
+            isTrashed: f.isTrashed
+        }));
+
+        res.json(formattedFiles);
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};
+
+exports.getTrashedFiles = async (req, res) => {
+    try {
+        const userFiles = await File.findAll({
+            where: { userId: req.user.id, isTrashed: true }
+        });
+
+        const formattedFiles = userFiles.map(f => ({
+            id: f.id,
+            name: f.filename,
+            type: f.mimetype,
+            size: f.size,
+            uploadDate: f.createdAt,
+            path: f.path,
+            isStarred: f.isStarred,
+            isTrashed: f.isTrashed
+        }));
+
+        res.json(formattedFiles);
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};
+
+// ============ Delete File (Permanent) ============
 
 exports.deleteFile = async (req, res) => {
     try {

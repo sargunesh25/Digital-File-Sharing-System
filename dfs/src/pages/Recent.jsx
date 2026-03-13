@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Plus } from 'lucide-react';
 import FileList from '../components/files/FileList';
-import UploadModal from '../components/files/UploadModal';
 import ShareModal from '../components/files/ShareModal';
 import api from '../api/axios';
 
-const Dashboard = () => {
-    const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
+const Recent = () => {
     const [isShareModalOpen, setIsShareModalOpen] = useState(false);
     const [selectedFile, setSelectedFile] = useState(null);
     const [files, setFiles] = useState([]);
@@ -14,14 +11,19 @@ const Dashboard = () => {
     const fetchFiles = async () => {
         try {
             const response = await api.get('/files');
-            // Map backend fields to frontend expectations
-            const mappedFiles = response.data.map(f => ({
+            let mappedFiles = response.data.map(f => ({
                 ...f,
                 createdAt: f.uploadDate
             }));
+
+            // Sort by createdAt descending
+            mappedFiles.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+            // Limit to the 20 most recent files
+            mappedFiles = mappedFiles.slice(0, 20);
+
             setFiles(mappedFiles);
         } catch (error) {
-            console.error('Error fetching files:', error);
+            console.error('Error fetching recent files:', error);
         }
     };
 
@@ -34,19 +36,11 @@ const Dashboard = () => {
         setIsShareModalOpen(true);
     };
 
-    const handleUpload = async () => {
-        // UploadModal now handles uploads directly (including chunked)
-        // Just refresh the file list
-        fetchFiles();
-    };
-
     const handleDownload = async (file) => {
         try {
             const response = await api.get(`/files/download/${file.id}`, {
-                responseType: 'blob', // Important for handling binary data
+                responseType: 'blob',
             });
-
-            // Create a blob URL and trigger download
             const url = window.URL.createObjectURL(new Blob([response.data]));
             const link = document.createElement('a');
             link.href = url;
@@ -62,10 +56,9 @@ const Dashboard = () => {
 
     const handleDelete = async (file) => {
         if (!window.confirm(`Are you sure you want to move ${file.name} to Trash?`)) return;
-
         try {
             await api.put(`/files/${file.id}/trash`);
-            fetchFiles(); // Refresh list
+            fetchFiles();
         } catch (error) {
             console.error('Error moving file to trash:', error);
             alert('Failed to move file to trash: ' + (error.response?.data?.message || error.message));
@@ -75,7 +68,6 @@ const Dashboard = () => {
     const handleToggleStar = async (file) => {
         try {
             await api.put(`/files/${file.id}/star`);
-            // Update local state for immediate feedback
             setFiles(files.map(f => f.id === file.id ? { ...f, isStarred: !f.isStarred } : f));
         } catch (error) {
             console.error('Error toggling star:', error);
@@ -83,19 +75,11 @@ const Dashboard = () => {
     };
 
     return (
-        <div className="space-y-6">
-            <div className="flex items-center justify-between animate-fade-in">
-                <h2 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-surface-900 to-surface-600">My Files</h2>
-                <button
-                    onClick={() => setIsUploadModalOpen(true)}
-                    className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-brand-600 to-teal-500 text-white font-medium rounded-xl hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300"
-                >
-                    <Plus className="w-5 h-5" />
-                    Upload File
-                </button>
+        <div className="space-y-8 animate-fade-in max-w-7xl mx-auto">
+            <div className="flex items-center justify-between mb-6">
+                <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-surface-900 to-surface-600 tracking-tight">Recent Files</h2>
             </div>
-
-            <div className="glass-card p-6 sm:p-8 rounded-2xl animate-slide-up">
+            <div className="glass-card p-6 rounded-2xl animate-slide-up">
                 <FileList
                     files={files}
                     onShare={handleShare}
@@ -104,13 +88,6 @@ const Dashboard = () => {
                     onToggleStar={handleToggleStar}
                 />
             </div>
-
-            <UploadModal
-                isOpen={isUploadModalOpen}
-                onClose={() => setIsUploadModalOpen(false)}
-                onUpload={handleUpload}
-            />
-
             <ShareModal
                 isOpen={isShareModalOpen}
                 onClose={() => setIsShareModalOpen(false)}
@@ -120,4 +97,4 @@ const Dashboard = () => {
     );
 };
 
-export default Dashboard;
+export default Recent;

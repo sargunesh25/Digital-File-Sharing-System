@@ -293,76 +293,78 @@ const P2PTransfer = () => {
     return (
         <div className="space-y-6 max-w-5xl mx-auto">
             {/* Header */}
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-8 animate-fade-in">
                 <div>
-                    <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
-                        <Zap className="w-6 h-6 text-yellow-500" />
+                    <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-surface-900 to-surface-600 flex items-center gap-3 tracking-tight">
+                        <div className="p-2 bg-gradient-to-br from-yellow-100 to-amber-50 rounded-xl shadow-sm">
+                            <Zap className="w-6 h-6 text-yellow-500" />
+                        </div>
                         P2P File Transfer
                     </h2>
-                    <p className="text-sm text-gray-500 mt-1">Transfer files directly between devices — no server upload needed</p>
+                    <p className="text-sm font-medium text-surface-500 mt-2 ml-1">Transfer files directly between devices — no server upload needed</p>
                 </div>
-                <div className="flex items-center gap-2 text-sm">
-                    <Shield className="w-4 h-4 text-green-500" />
-                    <span className="text-gray-500">End-to-end encrypted</span>
+                <div className="flex items-center gap-2 text-sm mt-4 md:mt-0 px-4 py-2 bg-green-50/80 text-green-700 rounded-full font-medium border border-green-100 shadow-sm backdrop-blur-sm">
+                    <Shield className="w-4 h-4" />
+                    <span>End-to-end encrypted</span>
                 </div>
             </div>
 
             {/* Connection Section */}
-            <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+            <div className="glass-card rounded-2xl animate-slide-up overflow-hidden">
                 {!isConnected && connectionState !== 'waiting' ? (
                     <div className="p-8 text-center max-w-2xl mx-auto">
                         {!transferRole ? (
-                            <div className="grid md:grid-cols-2 gap-8">
+                            <div className="grid md:grid-cols-2 gap-6 relative z-10">
                                 <button
                                     onClick={() => { setTransferRole('sender'); handleCreateRoom(); }}
-                                    className="p-8 border-2 border-gray-100 rounded-2xl hover:border-indigo-500 hover:bg-indigo-50 transition-all text-center flex flex-col items-center justify-center gap-4 group"
+                                    className="p-10 border border-surface-200 bg-white/50 backdrop-blur-sm rounded-3xl hover:border-brand-400 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 text-center flex flex-col items-center justify-center gap-5 group"
                                 >
-                                    <div className="w-20 h-20 bg-indigo-100 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
-                                        <Send className="w-10 h-10 text-indigo-600" />
+                                    <div className="w-24 h-24 bg-gradient-to-br from-brand-100 to-brand-50 rounded-2xl flex items-center justify-center group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 shadow-inner">
+                                        <Send className="w-12 h-12 text-brand-600 drop-shadow-sm" />
                                     </div>
                                     <div>
-                                        <h3 className="text-xl font-bold text-gray-800">Send</h3>
-                                        <p className="text-sm text-gray-500 mt-2">Generate a code to transfer files to another device safely.</p>
+                                        <h3 className="text-2xl font-bold text-surface-900 group-hover:text-brand-700 transition-colors">Send</h3>
+                                        <p className="text-sm text-surface-500 mt-2 max-w-[250px] mx-auto">Generate a secure code to instantly transmit files to another device.</p>
                                     </div>
                                 </button>
                                 <button
                                     onClick={() => setTransferRole('receiver')}
-                                    className="p-8 border-2 border-gray-100 rounded-2xl hover:border-emerald-500 hover:bg-emerald-50 transition-all text-center flex flex-col items-center justify-center gap-4 group"
+                                    className="p-10 border border-surface-200 bg-white/50 backdrop-blur-sm rounded-3xl hover:border-teal-400 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 text-center flex flex-col items-center justify-center gap-5 group"
                                 >
-                                    <div className="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
-                                        <Download className="w-10 h-10 text-emerald-600" />
+                                    <div className="w-24 h-24 bg-gradient-to-br from-teal-100 to-teal-50 rounded-2xl flex items-center justify-center group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-300 shadow-inner">
+                                        <Download className="w-12 h-12 text-teal-600 drop-shadow-sm" />
                                     </div>
                                     <div>
-                                        <h3 className="text-xl font-bold text-gray-800">Receive</h3>
-                                        <p className="text-sm text-gray-500 mt-2">Enter a 6-digit code from the sender to get files.</p>
+                                        <h3 className="text-2xl font-bold text-surface-900 group-hover:text-teal-700 transition-colors">Receive</h3>
+                                        <p className="text-sm text-surface-500 mt-2 max-w-[250px] mx-auto">Enter a 6-digit access code from the sender to get files directly.</p>
                                     </div>
                                 </button>
                             </div>
                         ) : transferRole === 'receiver' ? (
-                            <div className="max-w-md mx-auto space-y-6">
-                                <div className="w-16 h-16 mx-auto bg-emerald-100 rounded-2xl flex items-center justify-center">
-                                    <Smartphone className="w-8 h-8 text-emerald-600" />
+                            <div className="max-w-md mx-auto space-y-6 pt-6">
+                                <div className="w-20 h-20 mx-auto bg-gradient-to-br from-teal-100 to-teal-50 rounded-2xl flex items-center justify-center shadow-inner">
+                                    <Smartphone className="w-10 h-10 text-teal-600 drop-shadow-sm" />
                                 </div>
-                                <h3 className="text-xl font-bold text-gray-800">Receive Files</h3>
-                                <p className="text-sm text-gray-500">Enter the 6-digit room code shown on the sending device</p>
-                                <div className="flex gap-2">
+                                <h3 className="text-2xl font-bold text-surface-900">Receive Files</h3>
+                                <p className="text-sm font-medium text-surface-500">Enter the 6-digit room code shown on the sending device</p>
+                                <div className="flex gap-3">
                                     <input
                                         type="text"
                                         maxLength={6}
                                         value={inputCode}
                                         onChange={(e) => setInputCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
                                         placeholder="000000"
-                                        className="flex-1 px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-center text-2xl font-mono tracking-widest focus:ring-2 focus:ring-emerald-500 focus:bg-white outline-none transition-all"
+                                        className="flex-1 px-4 py-4 bg-white/80 border border-surface-200 rounded-xl text-center text-3xl font-mono tracking-widest focus:ring-2 focus:ring-teal-500 focus:bg-white outline-none transition-all shadow-inner text-surface-800 placeholder-surface-300"
                                     />
                                     <button
                                         onClick={handleJoinRoom}
                                         disabled={connectionState === 'joining' || inputCode.length !== 6}
-                                        className="px-6 py-3 bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 transition-all font-medium disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
+                                        className="px-8 py-4 bg-gradient-to-r from-teal-600 to-teal-500 text-white rounded-xl hover:shadow-lg transition-all font-semibold disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none min-w-[120px]"
                                     >
                                         {connectionState === 'joining' ? 'Joining...' : 'Join'}
                                     </button>
                                 </div>
-                                <button onClick={() => setTransferRole(null)} className="text-sm text-gray-500 hover:text-gray-700 underline pt-4">Start Over</button>
+                                <button onClick={() => setTransferRole(null)} className="text-sm font-semibold text-surface-500 hover:text-surface-800 transition-colors pt-4">Start Over</button>
                             </div>
                         ) : (
                             <div className="py-12">
@@ -373,43 +375,44 @@ const P2PTransfer = () => {
                     </div>
                 ) : connectionState === 'waiting' ? (
                     /* Waiting for peer (Sender Only) */
-                    <div className="p-12 text-center space-y-6">
-                        <div className="w-20 h-20 mx-auto bg-indigo-100 rounded-full flex items-center justify-center animate-pulse">
-                            <Wifi className="w-10 h-10 text-indigo-600" />
+                    <div className="p-12 text-center space-y-6 relative z-10 bg-white/50 backdrop-blur-sm">
+                        <div className="w-24 h-24 mx-auto bg-gradient-to-br from-brand-100 to-brand-50 rounded-full flex items-center justify-center shadow-inner relative">
+                            <div className="absolute inset-0 bg-brand-400 rounded-full animate-ping opacity-20"></div>
+                            <Wifi className="w-12 h-12 text-brand-600 relative z-10" />
                         </div>
                         <div>
-                            <p className="text-gray-600 mb-4 font-medium">Ready to send! Share this code with the receiver:</p>
-                            <div className="inline-flex items-center gap-3 bg-indigo-50 border-2 border-dashed border-indigo-300 rounded-2xl px-10 py-5">
-                                <span className="text-5xl font-mono font-bold text-indigo-700 tracking-[0.2em]">{roomCode}</span>
-                                <button onClick={copyCode} className="p-2 ml-2 bg-white shadow-sm hover:shadow border border-indigo-100 hover:bg-indigo-50 rounded-xl transition-all">
-                                    {copied ? <Check className="w-6 h-6 text-green-600" /> : <Copy className="w-6 h-6 text-indigo-400" />}
+                            <p className="text-surface-600 mb-6 font-medium text-lg">Ready to send! Share this code with the receiver:</p>
+                            <div className="inline-flex items-center gap-4 bg-gradient-to-br from-white to-surface-50 border-2 border-dashed border-brand-300 rounded-3xl px-12 py-6 shadow-sm">
+                                <span className="text-6xl font-mono font-bold text-transparent bg-clip-text bg-gradient-to-r from-brand-700 to-teal-600 tracking-[0.2em]">{roomCode}</span>
+                                <button onClick={copyCode} className="p-3 ml-4 bg-white shadow-sm hover:shadow-md border border-surface-200 hover:border-brand-300 hover:bg-brand-50 rounded-2xl transition-all group">
+                                    {copied ? <Check className="w-7 h-7 text-green-500" /> : <Copy className="w-7 h-7 text-brand-400 group-hover:text-brand-600" />}
                                 </button>
                             </div>
                         </div>
-                        <p className="text-sm text-gray-400 mt-6">Waiting for the receiving device to connect to the local network...</p>
-                        <button onClick={handleDisconnect} className="mt-4 px-6 py-2 bg-red-50 text-red-600 font-medium hover:bg-red-100 rounded-xl transition-colors">
+                        <p className="text-sm font-medium text-surface-400 mt-8">Waiting for the receiving device to connect to the local network...</p>
+                        <button onClick={handleDisconnect} className="mt-6 px-8 py-3 bg-red-50 text-red-600 font-semibold hover:bg-red-100 hover:text-red-700 rounded-xl transition-colors min-w-[200px]">
                             Cancel Transfer
                         </button>
                     </div>
                 ) : (
                     /* Connected */
-                    <div className="p-8">
-                        <div className="flex items-center justify-between mb-8 pb-6 border-b border-gray-100">
+                    <div className="p-6 md:p-10 relative z-10 bg-white/50 backdrop-blur-sm">
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 pb-6 border-b border-surface-200">
                             <div className="flex items-center gap-4">
-                                <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center">
-                                    <div className="w-4 h-4 rounded-full bg-green-500 animate-pulse"></div>
+                                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-green-100 to-green-50 flex items-center justify-center shadow-inner border border-green-200/50">
+                                    <div className="w-4 h-4 rounded-full bg-green-500 animate-pulse shadow-[0_0_12px_rgba(34,197,94,0.6)]"></div>
                                 </div>
                                 <div>
-                                    <div className="text-sm text-gray-500 font-medium mb-1">
+                                    <div className="text-sm text-surface-500 font-semibold mb-1 uppercase tracking-wide">
                                         {transferRole === 'sender' ? 'Connected to Receiver' : 'Connected to Sender'}
                                     </div>
-                                    <div className="flex items-center gap-2">
-                                        <span className="text-lg font-bold text-gray-800">{peerDevice?.deviceName || 'Unknown Device'}</span>
-                                        <span className="px-2 py-0.5 bg-gray-100 text-gray-500 rounded text-xs font-mono">Room: {roomCode}</span>
+                                    <div className="flex items-center gap-3">
+                                        <span className="text-xl font-bold text-surface-900">{peerDevice?.deviceName || 'Unknown Device'}</span>
+                                        <span className="px-2.5 py-1 bg-surface-100 text-surface-600 rounded-md text-xs font-mono font-medium border border-surface-200">Room: {roomCode}</span>
                                     </div>
                                 </div>
                             </div>
-                            <button onClick={handleDisconnect} className="flex items-center gap-2 px-4 py-2 font-medium text-red-600 hover:bg-red-50 rounded-xl transition-all border border-transparent hover:border-red-200">
+                            <button onClick={handleDisconnect} className="flex items-center justify-center gap-2 px-6 py-2.5 font-semibold text-red-600 bg-red-50 hover:bg-red-100 hover:text-red-700 rounded-xl transition-colors min-w-[140px]">
                                 <WifiOff className="w-5 h-5" />
                                 Disconnect
                             </button>
@@ -418,53 +421,55 @@ const P2PTransfer = () => {
                         {/* Send File Area (Only for Sender) */}
                         {transferRole === 'sender' && (
                             <div
-                                className="border-2 border-dashed border-indigo-200 bg-indigo-50/30 rounded-2xl p-10 text-center hover:border-indigo-400 hover:bg-indigo-50 transition-all cursor-pointer group"
+                                className="border-2 border-dashed border-brand-300 bg-gradient-to-br from-brand-50/50 to-white rounded-3xl p-12 text-center hover:border-brand-500 hover:shadow-md transition-all cursor-pointer group"
                                 onClick={() => fileInputRef.current?.click()}
                             >
                                 <input type="file" ref={fileInputRef} onChange={handleSendFile} multiple className="hidden" />
-                                <div className="w-16 h-16 mx-auto bg-white rounded-full shadow-sm flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                                    <Send className="w-8 h-8 text-indigo-500" />
+                                <div className="w-20 h-20 mx-auto bg-white rounded-2xl shadow-sm border border-brand-100 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-300">
+                                    <Send className="w-10 h-10 text-brand-500 drop-shadow-sm" />
                                 </div>
-                                <h3 className="text-xl font-bold text-gray-800 mb-2">Select files to send</h3>
-                                <p className="text-gray-500">Files are transferred securely at lightning speed over the local network.</p>
+                                <h3 className="text-2xl font-bold text-surface-900 mb-2 group-hover:text-brand-700 transition-colors">Select files to send</h3>
+                                <p className="text-surface-500 font-medium max-w-md mx-auto">Files are transferred securely at lightning speed over the local network.</p>
                             </div>
                         )}
 
                         {/* Receiving Area (Only for Receiver) */}
                         {transferRole === 'receiver' && (
-                            <div className="text-center py-10 bg-emerald-50/50 rounded-2xl border border-emerald-100">
-                                <div className="w-16 h-16 mx-auto bg-white rounded-full shadow-sm flex items-center justify-center mb-4">
-                                    <Download className="w-8 h-8 text-emerald-500 animate-bounce" />
+                            <div className="text-center py-12 bg-gradient-to-br from-teal-50/50 to-white rounded-3xl border-2 border-dashed border-teal-300">
+                                <div className="w-20 h-20 mx-auto bg-white rounded-2xl shadow-sm border border-teal-100 flex items-center justify-center mb-6">
+                                    <Download className="w-10 h-10 text-teal-500 animate-bounce drop-shadow-sm" />
                                 </div>
-                                <h3 className="text-xl font-bold text-gray-800 mb-2">Ready to Receive</h3>
-                                <p className="text-gray-500 font-medium">Waiting for the sender to transmit files...</p>
+                                <h3 className="text-2xl font-bold text-surface-900 mb-2">Ready to Receive</h3>
+                                <p className="text-surface-500 font-medium">Waiting for the sender to transmit files...</p>
                             </div>
                         )}
 
                         {/* Transfer Progress Container */}
                         {transferProgress && (
-                            <div className="mt-8 bg-white rounded-2xl p-6 border border-gray-200 shadow-sm relative overflow-hidden">
-                                <div className="absolute top-0 left-0 w-full h-1 bg-gray-100">
-                                    <div className={`h-full ${transferProgress.direction === 'send' ? 'bg-indigo-500' : 'bg-emerald-500'} transition-all duration-300`} style={{ width: `${transferProgress.percentage}%` }}></div>
+                            <div className="mt-8 bg-white rounded-3xl p-8 border border-surface-200 shadow-lg relative overflow-hidden animate-slide-up">
+                                <div className="absolute top-0 left-0 w-full h-1.5 bg-surface-100">
+                                    <div className={`h-full ${transferProgress.direction === 'send' ? 'bg-gradient-to-r from-brand-500 to-blue-500' : 'bg-gradient-to-r from-teal-500 to-emerald-500'} transition-all duration-300 relative`} style={{ width: `${transferProgress.percentage}%` }}>
+                                        <div className="absolute top-0 right-0 bottom-0 w-20 bg-gradient-to-r from-transparent to-white/50 animate-pulse"></div>
+                                    </div>
                                 </div>
-                                <div className="flex items-center justify-between mb-4 mt-2">
-                                    <div className="flex items-center gap-3">
-                                        <div className={`p-2 rounded-lg ${transferProgress.direction === 'send' ? 'bg-indigo-50 text-indigo-600' : 'bg-emerald-50 text-emerald-600'}`}>
-                                            <ArrowUpDown className="w-5 h-5" />
+                                <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 mt-2 gap-4">
+                                    <div className="flex items-center gap-4">
+                                        <div className={`p-3 rounded-2xl ${transferProgress.direction === 'send' ? 'bg-brand-50 text-brand-600 border border-brand-100' : 'bg-teal-50 text-teal-600 border border-teal-100'} shadow-sm`}>
+                                            <ArrowUpDown className="w-6 h-6" />
                                         </div>
                                         <div>
-                                            <div className="text-sm font-bold text-gray-800 truncate max-w-[250px]">{transferProgress.fileName}</div>
-                                            <div className="text-xs text-gray-500 font-medium mt-0.5">{transferProgress.direction === 'send' ? 'Sending...' : 'Receiving...'}</div>
+                                            <div className="text-base font-bold text-surface-900 truncate max-w-[200px] sm:max-w-[300px]">{transferProgress.fileName}</div>
+                                            <div className="text-sm text-surface-500 font-medium mt-1">{transferProgress.direction === 'send' ? 'Sending securely...' : 'Receiving securely...'}</div>
                                         </div>
                                     </div>
-                                    <div className="text-right">
-                                        <div className="text-lg font-bold text-gray-800">{transferProgress.percentage}%</div>
-                                        <div className="text-xs text-gray-500 font-medium mt-0.5">{formatSpeed(transferProgress.speed || 0)}</div>
+                                    <div className="text-left sm:text-right bg-surface-50 p-3 rounded-xl border border-surface-100">
+                                        <div className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-surface-900 to-surface-600">{transferProgress.percentage}%</div>
+                                        <div className="text-sm text-surface-500 font-semibold mt-1">{formatSpeed(transferProgress.speed || 0)}</div>
                                     </div>
                                 </div>
-                                <div className="flex justify-between items-center text-xs text-gray-400 font-medium bg-gray-50 rounded-lg p-2 px-3">
-                                    <span>Transferred: {formatSize(transferProgress.loaded)}</span>
-                                    <span>Total: {formatSize(transferProgress.total)}</span>
+                                <div className="flex justify-between items-center text-sm text-surface-500 font-semibold bg-surface-50 border border-surface-100 rounded-xl p-3 px-4">
+                                    <span>Transferred: <span className="text-surface-900">{formatSize(transferProgress.loaded)}</span></span>
+                                    <span>Total: <span className="text-surface-900">{formatSize(transferProgress.total)}</span></span>
                                 </div>
                             </div>
                         )}

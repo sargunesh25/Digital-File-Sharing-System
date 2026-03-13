@@ -14,10 +14,15 @@ router.post('/chunked/complete', authMiddleware, fileController.completeChunkedU
 
 // File operations
 router.get('/', authMiddleware, fileController.getFiles);
+router.get('/starred', authMiddleware, fileController.getStarredFiles);
+router.get('/trash', authMiddleware, fileController.getTrashedFiles);
 router.get('/shared', authMiddleware, fileController.getSharedFiles);
 router.get('/shared-with-me', authMiddleware, fileController.getSharedWithMe);
 router.get('/download/:id', authMiddleware, fileController.downloadFile);
 router.post('/share', authMiddleware, fileController.shareFile);
+router.put('/:id/star', authMiddleware, fileController.toggleStar);
+router.put('/:id/trash', authMiddleware, fileController.moveToTrash);
+router.put('/:id/restore', authMiddleware, fileController.restoreFromTrash);
 router.delete('/:id', authMiddleware, fileController.deleteFile);
 
 // Public shared file access

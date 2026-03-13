@@ -128,7 +128,7 @@ const SharedView = () => {
                     </button>
 
                     <p className="text-xs text-center text-gray-400 mt-6">
-                        Shared via CloudShare • <Link to="/" className="text-indigo-600 hover:underline">Create your own account</Link>
+                        Shared via Friendly Share • <Link to="/" className="text-indigo-600 hover:underline">Create your own account</Link>
                     </p>
                 </div>
             </div>

@@ -21,7 +21,7 @@ const Header = () => {
     ];
 
     return (
-        <header className="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6 z-20 relative">
+        <header className="h-16 bg-white/60 backdrop-blur-xl border-b border-white/40 shadow-sm flex items-center justify-between px-6 z-30 sticky top-0 transition-all duration-300">
             <div className="flex-1 max-w-xl">
                 <div className="relative">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -40,7 +40,7 @@ const Header = () => {
                             setShowNotifications(!showNotifications);
                             setShowProfileMenu(false);
                         }}
-                        className="p-2 text-gray-500 hover:bg-gray-100 rounded-full relative"
+                        className="p-2 text-surface-500 hover:bg-surface-100/80 rounded-full relative transition-colors shadow-sm bg-white/50 border border-white/60"
                     >
                         <Bell className="w-5 h-5" />
                         <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full"></span>
@@ -79,9 +79,9 @@ const Header = () => {
                             setShowProfileMenu(!showProfileMenu);
                             setShowNotifications(false);
                         }}
-                        className="flex items-center gap-2 hover:bg-gray-50 p-1 pr-3 rounded-full border border-gray-200 transition-colors"
+                        className="flex items-center gap-2 hover:bg-surface-100/80 p-1 pr-3 rounded-full border border-white/60 shadow-sm bg-white/50 transition-colors"
                     >
-                        <div className="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600">
+                        <div className="w-8 h-8 bg-gradient-to-br from-brand-100 to-teal-50 rounded-full flex items-center justify-center text-brand-600 shadow-inner">
                             <User className="w-5 h-5" />
                         </div>
                         <span className="text-sm font-medium text-gray-700">{user?.username || 'User'}</span>

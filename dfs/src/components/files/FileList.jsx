@@ -1,7 +1,7 @@
 import React from 'react';
 import FileCard from './FileCard';
 
-const FileList = ({ files, onShare, onDownload, onDelete }) => {
+const FileList = ({ files, onShare, onDownload, onDelete, onToggleStar, onRestore, isTrashView }) => {
     if (files.length === 0) {
         return (
             <div className="text-center py-12">
@@ -19,6 +19,9 @@ const FileList = ({ files, onShare, onDownload, onDelete }) => {
                     onShare={onShare}
                     onDownload={onDownload}
                     onDelete={onDelete}
+                    onToggleStar={onToggleStar}
+                    onRestore={onRestore}
+                    isTrashView={isTrashView}
                 />
             ))}
         </div>
