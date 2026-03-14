@@ -1,20 +1,16 @@
 const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
+const cloudinary = require('cloudinary').v2;
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
 
-// Ensure uploads directory exists
-const uploadDir = 'uploads/';
-if (!fs.existsSync(uploadDir)) {
-    fs.mkdirSync(uploadDir);
-}
+// Note: Cloudinary v2 SDK automatically picks up the CLOUDINARY_URL environment variable!
 
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, uploadDir);
+const storage = new CloudinaryStorage({
+    cloudinary: cloudinary,
+    params: {
+        folder: 'dfs_uploads',
+        resource_type: 'auto', // Important so PDFs/zips are accepted as "raw" and images as "image"
+        public_id: (req, file) => Date.now() + '-' + file.originalname.replace(/\.[^/.]+$/, ""), // Strip extension for Cloudinary ID
     },
-    filename: (req, file, cb) => {
-        cb(null, Date.now() + '-' + file.originalname);
-    }
 });
 
 const upload = multer({

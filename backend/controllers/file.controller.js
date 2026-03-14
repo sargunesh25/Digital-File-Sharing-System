@@ -192,8 +192,12 @@ exports.downloadFile = async (req, res) => {
             return res.status(404).json({ message: 'File not found or access denied' });
         }
 
-        const filePath = path.join(__dirname, '..', file.path);
+        if (file.path.startsWith('http')) {
+            // It's a Cloudinary URL, redirect to it
+            return res.redirect(file.path);
+        }
 
+        const filePath = path.join(__dirname, '..', file.path);
         if (!fs.existsSync(filePath)) {
             return res.status(404).json({ message: 'Physical file not found on server' });
         }
@@ -585,6 +589,10 @@ exports.downloadSharedFileByToken = async (req, res) => {
             } catch (e) {
                 return res.status(401).json({ message: 'Invalid token' });
             }
+        }
+
+        if (fileShare.file.path.startsWith('http')) {
+            return res.redirect(fileShare.file.path);
         }
 
         const filePath = path.join(__dirname, '..', fileShare.file.path);

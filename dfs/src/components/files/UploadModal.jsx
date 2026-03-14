@@ -3,7 +3,7 @@ import { Upload, X, File, CheckCircle, AlertCircle } from 'lucide-react';
 import api from '../../api/axios';
 
 const CHUNK_SIZE = 2 * 1024 * 1024; // 2MB chunks for server upload
-const CHUNKED_THRESHOLD = 5 * 1024 * 1024; // 5MB — use chunked for files larger than this
+const CHUNKED_THRESHOLD = 5000 * 1024 * 1024; // Effectively disabled for Cloudinary direct streams
 
 const UploadModal = ({ isOpen, onClose, onUpload }) => {
     const [dragActive, setDragActive] = useState(false);
