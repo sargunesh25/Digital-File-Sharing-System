@@ -1,7 +1,9 @@
 import axios from 'axios';
 
 const API_HOST = window.location.hostname; // Dynamically use the current host
-const baseURL = import.meta.env.VITE_BACKEND_URL || `http://${API_HOST}:5000`;
+let baseURL = import.meta.env.VITE_BACKEND_URL || `http://${API_HOST}:5000`;
+// Strip trailing slash if present
+baseURL = baseURL.replace(/\/$/, '');
 
 const api = axios.create({
     baseURL: `${baseURL}/api`,
