@@ -16,10 +16,15 @@ let activePort = Number(PORT);
 let started = false;
 let retryScheduled = false;
 
+// Strip trailing slash from FRONTEND_URL if it exists to strictly match browser Origin headers
+const allowedOrigin = process.env.FRONTEND_URL 
+    ? process.env.FRONTEND_URL.replace(/\/$/, '') 
+    : '*';
+
 // Socket.IO setup with CORS
 const io = new Server(server, {
     cors: {
-        origin: '*',
+        origin: allowedOrigin,
         methods: ['GET', 'POST']
     }
 });
@@ -32,7 +37,7 @@ const swaggerSpec = require('./swagger');
 
 // Middleware
 app.use(cors({
-    origin: process.env.FRONTEND_URL || '*',
+    origin: allowedOrigin,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
