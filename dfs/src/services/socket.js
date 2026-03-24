@@ -1,6 +1,7 @@
 import { io } from 'socket.io-client';
 
-const SIGNALING_URL = import.meta.env.VITE_BACKEND_URL || `http://${window.location.hostname}:5000`;
+const rawSignalingUrl = import.meta.env.VITE_BACKEND_URL || `http://${window.location.hostname}:5000`;
+const SIGNALING_URL = rawSignalingUrl.replace(/\/$/, '');
 
 class SignalingService {
     constructor() {

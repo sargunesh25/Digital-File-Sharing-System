@@ -1,7 +1,31 @@
 const CHUNK_SIZE = 64 * 1024; // 64KB chunks for DataChannel
 
+const DEFAULT_ICE_SERVERS = [
+    { urls: 'stun:stun.l.google.com:19302' },
+    { urls: 'stun:stun1.l.google.com:19302' }
+];
+
+function resolveIceServers() {
+    // Allow overriding with VITE_ICE_SERVERS as JSON string.
+    // Example:
+    // [{"urls":"stun:stun.l.google.com:19302"},{"urls":"turn:turn.example.com:3478","username":"u","credential":"p"}]
+    const raw = import.meta.env.VITE_ICE_SERVERS;
+    if (!raw) return DEFAULT_ICE_SERVERS;
+
+    try {
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+            return parsed;
+        }
+    } catch (err) {
+        console.warn('[WebRTC] Invalid VITE_ICE_SERVERS JSON. Falling back to defaults.', err);
+    }
+
+    return DEFAULT_ICE_SERVERS;
+}
+
 const RTC_CONFIG = {
-    iceServers: [] // Empty array forces strictly local network transfers (no STUN/TURN)
+    iceServers: resolveIceServers()
 };
 
 export class WebRTCService {

@@ -70,7 +70,8 @@ app.get('/', (req, res) => {
 const rooms = new Map();
 
 function generateRoomCode() {
-    return Math.floor(Math.random() * 1000000).toString();
+    // Always return 6 digits to match the frontend UX/validation.
+    return Math.floor(Math.random() * 1000000).toString().padStart(6, '0');
 }
 
 io.on('connection', (socket) => {
@@ -101,7 +102,8 @@ io.on('connection', (socket) => {
     // Join an existing room
     socket.on('join-room', (data, callback) => {
         const { roomCode, deviceName } = data;
-        const room = rooms.get(roomCode);
+        const normalizedRoomCode = String(roomCode || '').trim();
+        const room = rooms.get(normalizedRoomCode);
 
         if (!room) {
             return callback({ success: false, error: 'Room not found. Check the code and try again.' });
@@ -112,11 +114,11 @@ io.on('connection', (socket) => {
         }
 
         room.peers.add(socket.id);
-        socket.join(roomCode);
-        socket.roomCode = roomCode;
+        socket.join(normalizedRoomCode);
+        socket.roomCode = normalizedRoomCode;
         socket.deviceName = deviceName || 'Unknown Device';
 
-        console.log(`[Socket] ${socket.id} joined room ${roomCode}`);
+        console.log(`[Socket] ${socket.id} joined room ${normalizedRoomCode}`);
 
         // Notify host that a peer joined
         io.to(room.hostSocketId).emit('peer-joined', {
