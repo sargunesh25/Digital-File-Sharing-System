@@ -16,10 +16,27 @@ let activePort = Number(PORT);
 let started = false;
 let retryScheduled = false;
 
-// Strip trailing slash from FRONTEND_URL if it exists to strictly match browser Origin headers
-const allowedOrigin = process.env.FRONTEND_URL 
-    ? process.env.FRONTEND_URL.replace(/\/$/, '') 
-    : '*';
+// Build allowed origins list from FRONTEND_URL env var.
+// Supports comma-separated values and automatically includes Vercel preview deployments.
+const buildAllowedOrigins = () => {
+    if (!process.env.FRONTEND_URL) return '*';  // allow all in dev
+    
+    const origins = process.env.FRONTEND_URL
+        .split(',')
+        .map(u => u.trim().replace(/\/$/, ''))
+        .filter(Boolean);
+    
+    return (requestOrigin, callback) => {
+        // Allow if origin matches exactly, or is a Vercel preview deployment for this project
+        const isAllowed = !requestOrigin 
+            || origins.includes(requestOrigin)
+            || /^https:\/\/digital-file-sharing-system.*\.vercel\.app$/.test(requestOrigin);
+        
+        callback(null, isAllowed ? requestOrigin : false);
+    };
+};
+
+const allowedOrigin = buildAllowedOrigins();
 
 // Socket.IO setup with CORS
 const io = new Server(server, {
