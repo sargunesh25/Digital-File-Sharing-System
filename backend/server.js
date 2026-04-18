@@ -17,22 +17,54 @@ let started = false;
 let retryScheduled = false;
 
 // Build allowed origins list from FRONTEND_URL env var.
-// Supports comma-separated values and automatically includes Vercel preview deployments.
+// Supports comma-separated values and wildcard hosts like:
+// - https://*.vercel.app
+// - *.vercel.app
 const buildAllowedOrigins = () => {
-    if (!process.env.FRONTEND_URL) return '*';  // allow all in dev
-    
-    const origins = process.env.FRONTEND_URL
+    const frontendEnv = String(process.env.FRONTEND_URL || '').trim();
+
+    // In local/dev, if FRONTEND_URL is not set, allow all origins.
+    if (!frontendEnv) {
+        return true;
+    }
+
+    const normalizedOrigin = (value = '') => String(value).trim().replace(/\/$/, '');
+    const configuredOrigins = frontendEnv
         .split(',')
-        .map(u => u.trim().replace(/\/$/, ''))
+        .map(normalizedOrigin)
         .filter(Boolean);
-    
+
+    const exactOrigins = configuredOrigins.filter(origin => !origin.includes('*'));
+    const wildcardMatchers = configuredOrigins
+        .filter(origin => origin.includes('*'))
+        .map((pattern) => {
+            // Ensure host-only patterns like *.vercel.app are treated as https://*.vercel.app
+            const withProtocol = /^https?:\/\//i.test(pattern)
+                ? pattern
+                : `https://${pattern}`;
+
+            const escaped = withProtocol
+                .replace(/[.+?^${}()|[\]\\]/g, '\\$&')
+                .replace(/\*/g, '.*');
+
+            return new RegExp(`^${escaped}$`, 'i');
+        });
+
     return (requestOrigin, callback) => {
-        // Allow if origin matches exactly, or is a Vercel preview deployment for this project
-        const isAllowed = !requestOrigin 
-            || origins.includes(requestOrigin)
-            || /^https:\/\/digital-file-sharing-system.*\.vercel\.app$/.test(requestOrigin);
-        
-        callback(null, isAllowed ? requestOrigin : false);
+        // Allow non-browser or same-origin server-to-server requests.
+        if (!requestOrigin) {
+            return callback(null, true);
+        }
+
+        const normalizedRequestOrigin = normalizedOrigin(requestOrigin);
+        const isExactMatch = exactOrigins.includes(normalizedRequestOrigin);
+        const isWildcardMatch = wildcardMatchers.some((regex) => regex.test(normalizedRequestOrigin));
+
+        if (isExactMatch || isWildcardMatch) {
+            return callback(null, true);
+        }
+
+        return callback(null, false);
     };
 };
 
