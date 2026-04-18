@@ -1,32 +1,30 @@
 import { io } from 'socket.io-client';
-
-const rawSignalingUrl = import.meta.env.VITE_BACKEND_URL || `http://${window.location.hostname}:5000`;
-const SIGNALING_URL = rawSignalingUrl.replace(/\/$/, '');
+import { getBackendBaseUrl } from '../api/backendUrl';
 
 class SignalingService {
     constructor() {
         this.socket = null;
+        this.connectPromise = null;
         this.callbacks = {};
     }
 
-    connect() {
-        if (this.socket?.connected) return Promise.resolve();
+    async connect() {
+        if (this.socket?.connected) {
+            return Promise.resolve();
+        }
 
-        return new Promise((resolve, reject) => {
-            this.socket = io(SIGNALING_URL, {
-                transports: ['websocket', 'polling'],
+        if (this.connectPromise) {
+            return this.connectPromise;
+        }
+
+        if (!this.socket) {
+            const signalingUrl = await getBackendBaseUrl();
+            this.socket = io(signalingUrl, {
+                transports: ['polling', 'websocket'],
                 reconnection: true,
-                reconnectionAttempts: 5
-            });
-
-            this.socket.on('connect', () => {
-                console.log('[Signal] Connected:', this.socket.id);
-                resolve();
-            });
-
-            this.socket.on('connect_error', (err) => {
-                console.error('[Signal] Connection error:', err);
-                reject(err);
+                reconnectionAttempts: 5,
+                timeout: 10000,
+                autoConnect: false
             });
 
             // Relay events to callbacks
@@ -35,12 +33,60 @@ class SignalingService {
             this.socket.on('offer', (data) => this._emit('offer', data));
             this.socket.on('answer', (data) => this._emit('answer', data));
             this.socket.on('ice-candidate', (data) => this._emit('ice-candidate', data));
+        }
+
+        this.connectPromise = new Promise((resolve, reject) => {
+            let settled = false;
+            let lastError = null;
+
+            const cleanup = () => {
+                this.socket.off('connect', onConnect);
+                this.socket.off('connect_error', onConnectError);
+                clearTimeout(timeoutId);
+                this.connectPromise = null;
+            };
+
+            const onConnect = () => {
+                if (settled) return;
+                settled = true;
+                console.log('[Signal] Connected:', this.socket.id);
+                cleanup();
+                resolve();
+            };
+
+            const onConnectError = (err) => {
+                // Keep trying until timeout/reconnection attempts are exhausted.
+                lastError = err;
+                console.warn('[Signal] Connection attempt failed:', err?.message || err);
+            };
+
+            const timeoutId = setTimeout(() => {
+                if (settled) return;
+                settled = true;
+                cleanup();
+                reject(lastError || new Error('Unable to connect to signaling server'));
+            }, 12000);
+
+            this.socket.on('connect', onConnect);
+            this.socket.on('connect_error', onConnectError);
+            this.socket.connect();
         });
+
+        return this.connectPromise;
     }
 
     createRoom(deviceName) {
+        if (!this.socket?.connected) {
+            return Promise.reject(new Error('Signaling socket is not connected'));
+        }
+
         return new Promise((resolve, reject) => {
-            this.socket.emit('create-room', { deviceName }, (response) => {
+            this.socket.timeout(10000).emit('create-room', { deviceName }, (err, response) => {
+                if (err) {
+                    reject(new Error('Create room request timed out'));
+                    return;
+                }
+
                 if (response.success) {
                     resolve(response.roomCode);
                 } else {
@@ -51,8 +97,17 @@ class SignalingService {
     }
 
     joinRoom(roomCode, deviceName) {
+        if (!this.socket?.connected) {
+            return Promise.reject(new Error('Signaling socket is not connected'));
+        }
+
         return new Promise((resolve, reject) => {
-            this.socket.emit('join-room', { roomCode, deviceName }, (response) => {
+            this.socket.timeout(10000).emit('join-room', { roomCode, deviceName }, (err, response) => {
+                if (err) {
+                    reject(new Error('Join room request timed out'));
+                    return;
+                }
+
                 if (response.success) {
                     resolve({ hostId: response.hostId, hostDeviceName: response.hostDeviceName });
                 } else {
@@ -92,6 +147,7 @@ class SignalingService {
     }
 
     disconnect() {
+        this.connectPromise = null;
         if (this.socket) {
             this.socket.disconnect();
             this.socket = null;

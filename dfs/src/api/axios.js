@@ -1,12 +1,7 @@
 import axios from 'axios';
-
-const API_HOST = window.location.hostname; // Dynamically use the current host
-let baseURL = import.meta.env.VITE_BACKEND_URL || `http://${API_HOST}:5000`;
-// Strip trailing slash if present
-baseURL = baseURL.replace(/\/$/, '');
+import { getBackendBaseUrl } from './backendUrl';
 
 const api = axios.create({
-    baseURL: `${baseURL}/api`,
     headers: {
         'Content-Type': 'application/json',
     },
@@ -14,7 +9,10 @@ const api = axios.create({
 
 // Add a request interceptor to add the auth token
 api.interceptors.request.use(
-    (config) => {
+    async (config) => {
+        const backendBaseUrl = await getBackendBaseUrl();
+        config.baseURL = `${backendBaseUrl}/api`;
+
         const token = localStorage.getItem('token');
         if (token) {
             config.headers['Authorization'] = `Bearer ${token}`;
