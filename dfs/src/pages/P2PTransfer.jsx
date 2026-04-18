@@ -312,31 +312,31 @@ const P2PTransfer = () => {
             {/* Connection Section */}
             <div className="glass-card rounded-2xl animate-slide-up overflow-hidden">
                 {!isConnected && connectionState !== 'waiting' ? (
-                    <div className="p-8 text-center max-w-2xl mx-auto">
+                    <div className="p-4 sm:p-8 text-center max-w-2xl mx-auto">
                         {!transferRole ? (
-                            <div className="grid md:grid-cols-2 gap-6 relative z-10">
+                            <div className="grid md:grid-cols-2 gap-4 sm:gap-6 relative z-10">
                                 <button
                                     onClick={() => { setTransferRole('sender'); handleCreateRoom(); }}
-                                    className="p-10 border border-surface-200 bg-white/50 backdrop-blur-sm rounded-3xl hover:border-brand-400 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 text-center flex flex-col items-center justify-center gap-5 group"
+                                    className="p-5 sm:p-10 border border-surface-200 bg-white/50 backdrop-blur-sm rounded-3xl hover:border-brand-400 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 text-center flex flex-col items-center justify-center gap-3 sm:gap-5 group w-full"
                                 >
-                                    <div className="w-24 h-24 bg-gradient-to-br from-brand-100 to-brand-50 rounded-2xl flex items-center justify-center group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 shadow-inner">
-                                        <Send className="w-12 h-12 text-brand-600 drop-shadow-sm" />
+                                    <div className="w-14 h-14 sm:w-24 sm:h-24 bg-gradient-to-br from-brand-100 to-brand-50 rounded-2xl flex items-center justify-center group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 shadow-inner">
+                                        <Send className="w-7 h-7 sm:w-12 sm:h-12 text-brand-600 drop-shadow-sm" />
                                     </div>
                                     <div>
-                                        <h3 className="text-2xl font-bold text-surface-900 group-hover:text-brand-700 transition-colors">Send</h3>
-                                        <p className="text-sm text-surface-500 mt-2 max-w-[250px] mx-auto">Generate a secure code to instantly transmit files to another device.</p>
+                                        <h3 className="text-xl sm:text-2xl font-bold text-surface-900 group-hover:text-brand-700 transition-colors">Send</h3>
+                                        <p className="text-xs sm:text-sm text-surface-500 mt-1 sm:mt-2 max-w-[250px] mx-auto">Generate a secure code to instantly transmit files to another device.</p>
                                     </div>
                                 </button>
                                 <button
                                     onClick={() => setTransferRole('receiver')}
-                                    className="p-10 border border-surface-200 bg-white/50 backdrop-blur-sm rounded-3xl hover:border-teal-400 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 text-center flex flex-col items-center justify-center gap-5 group"
+                                    className="p-5 sm:p-10 border border-surface-200 bg-white/50 backdrop-blur-sm rounded-3xl hover:border-teal-400 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 text-center flex flex-col items-center justify-center gap-3 sm:gap-5 group w-full"
                                 >
-                                    <div className="w-24 h-24 bg-gradient-to-br from-teal-100 to-teal-50 rounded-2xl flex items-center justify-center group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-300 shadow-inner">
-                                        <Download className="w-12 h-12 text-teal-600 drop-shadow-sm" />
+                                    <div className="w-14 h-14 sm:w-24 sm:h-24 bg-gradient-to-br from-teal-100 to-teal-50 rounded-2xl flex items-center justify-center group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-300 shadow-inner">
+                                        <Download className="w-7 h-7 sm:w-12 sm:h-12 text-teal-600 drop-shadow-sm" />
                                     </div>
                                     <div>
-                                        <h3 className="text-2xl font-bold text-surface-900 group-hover:text-teal-700 transition-colors">Receive</h3>
-                                        <p className="text-sm text-surface-500 mt-2 max-w-[250px] mx-auto">Enter a 6-digit access code from the sender to get files directly.</p>
+                                        <h3 className="text-xl sm:text-2xl font-bold text-surface-900 group-hover:text-teal-700 transition-colors">Receive</h3>
+                                        <p className="text-xs sm:text-sm text-surface-500 mt-1 sm:mt-2 max-w-[250px] mx-auto">Enter a 6-digit access code from the sender to get files directly.</p>
                                     </div>
                                 </button>
                             </div>
@@ -347,7 +347,7 @@ const P2PTransfer = () => {
                                 </div>
                                 <h3 className="text-2xl font-bold text-surface-900">Receive Files</h3>
                                 <p className="text-sm font-medium text-surface-500">Enter the 6-digit room code shown on the sending device</p>
-                                <div className="flex gap-3">
+                                <div className="flex flex-col sm:flex-row gap-3">
                                     <input
                                         type="text"
                                         maxLength={6}
@@ -359,7 +359,7 @@ const P2PTransfer = () => {
                                     <button
                                         onClick={handleJoinRoom}
                                         disabled={connectionState === 'joining' || inputCode.length !== 6}
-                                        className="px-8 py-4 bg-gradient-to-r from-teal-600 to-teal-500 text-white rounded-xl hover:shadow-lg transition-all font-semibold disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none min-w-[120px]"
+                                        className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-teal-600 to-teal-500 text-white rounded-xl hover:shadow-lg transition-all font-semibold disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none min-w-[120px]"
                                     >
                                         {connectionState === 'joining' ? 'Joining...' : 'Join'}
                                     </button>
@@ -375,22 +375,22 @@ const P2PTransfer = () => {
                     </div>
                 ) : connectionState === 'waiting' ? (
                     /* Waiting for peer (Sender Only) */
-                    <div className="p-12 text-center space-y-6 relative z-10 bg-white/50 backdrop-blur-sm">
-                        <div className="w-24 h-24 mx-auto bg-gradient-to-br from-brand-100 to-brand-50 rounded-full flex items-center justify-center shadow-inner relative">
+                    <div className="p-6 sm:p-12 text-center space-y-6 relative z-10 bg-white/50 backdrop-blur-sm">
+                        <div className="w-16 h-16 sm:w-24 sm:h-24 mx-auto bg-gradient-to-br from-brand-100 to-brand-50 rounded-full flex items-center justify-center shadow-inner relative">
                             <div className="absolute inset-0 bg-brand-400 rounded-full animate-ping opacity-20"></div>
-                            <Wifi className="w-12 h-12 text-brand-600 relative z-10" />
+                            <Wifi className="w-8 h-8 sm:w-12 sm:h-12 text-brand-600 relative z-10" />
                         </div>
                         <div>
                             <p className="text-surface-600 mb-6 font-medium text-lg">Ready to send! Share this code with the receiver:</p>
-                            <div className="inline-flex items-center gap-4 bg-gradient-to-br from-white to-surface-50 border-2 border-dashed border-brand-300 rounded-3xl px-12 py-6 shadow-sm">
-                                <span className="text-6xl font-mono font-bold text-transparent bg-clip-text bg-gradient-to-r from-brand-700 to-teal-600 tracking-[0.2em]">{roomCode}</span>
+                            <div className="inline-flex flex-wrap items-center justify-center gap-4 bg-gradient-to-br from-white to-surface-50 border-2 border-dashed border-brand-300 rounded-3xl px-6 sm:px-12 py-6 shadow-sm">
+                                <span className="text-4xl sm:text-6xl font-mono font-bold text-transparent bg-clip-text bg-gradient-to-r from-brand-700 to-teal-600 tracking-[0.12em] sm:tracking-[0.2em]">{roomCode}</span>
                                 <button onClick={copyCode} className="p-3 ml-4 bg-white shadow-sm hover:shadow-md border border-surface-200 hover:border-brand-300 hover:bg-brand-50 rounded-2xl transition-all group">
                                     {copied ? <Check className="w-7 h-7 text-green-500" /> : <Copy className="w-7 h-7 text-brand-400 group-hover:text-brand-600" />}
                                 </button>
                             </div>
                         </div>
                         <p className="text-sm font-medium text-surface-400 mt-8">Waiting for the receiving device to connect to the local network...</p>
-                        <button onClick={handleDisconnect} className="mt-6 px-8 py-3 bg-red-50 text-red-600 font-semibold hover:bg-red-100 hover:text-red-700 rounded-xl transition-colors min-w-[200px]">
+                        <button onClick={handleDisconnect} className="mt-6 w-full sm:w-auto px-8 py-3 bg-red-50 text-red-600 font-semibold hover:bg-red-100 hover:text-red-700 rounded-xl transition-colors min-w-[200px]">
                             Cancel Transfer
                         </button>
                     </div>
@@ -421,12 +421,12 @@ const P2PTransfer = () => {
                         {/* Send File Area (Only for Sender) */}
                         {transferRole === 'sender' && (
                             <div
-                                className="border-2 border-dashed border-brand-300 bg-gradient-to-br from-brand-50/50 to-white rounded-3xl p-12 text-center hover:border-brand-500 hover:shadow-md transition-all cursor-pointer group"
+                                className="border-2 border-dashed border-brand-300 bg-gradient-to-br from-brand-50/50 to-white rounded-3xl p-6 sm:p-12 text-center hover:border-brand-500 hover:shadow-md transition-all cursor-pointer group"
                                 onClick={() => fileInputRef.current?.click()}
                             >
                                 <input type="file" ref={fileInputRef} onChange={handleSendFile} multiple className="hidden" />
-                                <div className="w-20 h-20 mx-auto bg-white rounded-2xl shadow-sm border border-brand-100 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-300">
-                                    <Send className="w-10 h-10 text-brand-500 drop-shadow-sm" />
+                                <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto bg-white rounded-2xl shadow-sm border border-brand-100 flex items-center justify-center mb-4 sm:mb-6 group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-300">
+                                    <Send className="w-8 h-8 sm:w-10 sm:h-10 text-brand-500 drop-shadow-sm" />
                                 </div>
                                 <h3 className="text-2xl font-bold text-surface-900 mb-2 group-hover:text-brand-700 transition-colors">Select files to send</h3>
                                 <p className="text-surface-500 font-medium max-w-md mx-auto">Files are transferred securely at lightning speed over the local network.</p>
@@ -435,9 +435,9 @@ const P2PTransfer = () => {
 
                         {/* Receiving Area (Only for Receiver) */}
                         {transferRole === 'receiver' && (
-                            <div className="text-center py-12 bg-gradient-to-br from-teal-50/50 to-white rounded-3xl border-2 border-dashed border-teal-300">
-                                <div className="w-20 h-20 mx-auto bg-white rounded-2xl shadow-sm border border-teal-100 flex items-center justify-center mb-6">
-                                    <Download className="w-10 h-10 text-teal-500 animate-bounce drop-shadow-sm" />
+                            <div className="text-center py-8 sm:py-12 bg-gradient-to-br from-teal-50/50 to-white rounded-3xl border-2 border-dashed border-teal-300">
+                                <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto bg-white rounded-2xl shadow-sm border border-teal-100 flex items-center justify-center mb-4 sm:mb-6">
+                                    <Download className="w-8 h-8 sm:w-10 sm:h-10 text-teal-500 animate-bounce drop-shadow-sm" />
                                 </div>
                                 <h3 className="text-2xl font-bold text-surface-900 mb-2">Ready to Receive</h3>
                                 <p className="text-surface-500 font-medium">Waiting for the sender to transmit files...</p>
@@ -446,7 +446,7 @@ const P2PTransfer = () => {
 
                         {/* Transfer Progress Container */}
                         {transferProgress && (
-                            <div className="mt-8 bg-white rounded-3xl p-8 border border-surface-200 shadow-lg relative overflow-hidden animate-slide-up">
+                            <div className="mt-8 bg-white rounded-3xl p-6 sm:p-8 border border-surface-200 shadow-lg relative overflow-hidden animate-slide-up">
                                 <div className="absolute top-0 left-0 w-full h-1.5 bg-surface-100">
                                     <div className={`h-full ${transferProgress.direction === 'send' ? 'bg-gradient-to-r from-brand-500 to-blue-500' : 'bg-gradient-to-r from-teal-500 to-emerald-500'} transition-all duration-300 relative`} style={{ width: `${transferProgress.percentage}%` }}>
                                         <div className="absolute top-0 right-0 bottom-0 w-20 bg-gradient-to-r from-transparent to-white/50 animate-pulse"></div>
@@ -499,7 +499,7 @@ const P2PTransfer = () => {
                     </h3>
                     <div className="space-y-3">
                         {receivedFiles.map((file, idx) => (
-                            <div key={idx} className="flex items-center justify-between p-3 bg-gray-50 rounded-xl border border-gray-100">
+                            <div key={idx} className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-3 bg-gray-50 rounded-xl border border-gray-100">
                                 <div className="flex items-center gap-3">
                                     <div className="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center">
                                         <FileIcon className="w-5 h-5 text-emerald-600" />
@@ -512,7 +512,7 @@ const P2PTransfer = () => {
                                 <a
                                     href={file.url}
                                     download={file.name}
-                                    className="px-4 py-2 bg-emerald-600 text-white text-sm rounded-lg hover:bg-emerald-700 transition-colors shadow-sm"
+                                    className="w-full sm:w-auto text-center px-4 py-2 bg-emerald-600 text-white text-sm rounded-lg hover:bg-emerald-700 transition-colors shadow-sm"
                                 >
                                     Save
                                 </a>
@@ -531,7 +531,7 @@ const P2PTransfer = () => {
                     </h3>
                     <div className="space-y-3">
                         {sentFiles.map((file, idx) => (
-                            <div key={idx} className="flex items-center justify-between p-3 bg-gray-50 rounded-xl border border-gray-100">
+                            <div key={idx} className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-3 bg-gray-50 rounded-xl border border-gray-100">
                                 <div className="flex items-center gap-3">
                                     <div className="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
                                         <FileIcon className="w-5 h-5 text-indigo-600" />

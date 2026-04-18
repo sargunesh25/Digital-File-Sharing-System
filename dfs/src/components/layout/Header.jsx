@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Search, Bell, User, Settings, LogOut, ChevronDown } from 'lucide-react';
+import { Search, Bell, User, Settings, LogOut, ChevronDown, Menu } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
-const Header = () => {
+const Header = ({ onToggleSidebar = () => {} }) => {
     const [showNotifications, setShowNotifications] = useState(false);
     const [showProfileMenu, setShowProfileMenu] = useState(false);
     const { user, logout } = useAuth();
@@ -21,8 +21,16 @@ const Header = () => {
     ];
 
     return (
-        <header className="h-16 bg-white/60 backdrop-blur-xl border-b border-white/40 shadow-sm flex items-center justify-between px-6 z-30 sticky top-0 transition-all duration-300">
-            <div className="flex-1 max-w-xl">
+        <header className="h-16 bg-white/60 backdrop-blur-xl border-b border-white/40 shadow-sm flex items-center justify-between px-3 sm:px-4 md:px-6 z-30 sticky top-0 transition-all duration-300 gap-2 sm:gap-4">
+            <button
+                onClick={onToggleSidebar}
+                className="md:hidden p-2 text-surface-600 hover:bg-surface-100 rounded-lg"
+                aria-label="Open sidebar"
+            >
+                <Menu className="w-5 h-5" />
+            </button>
+
+            <div className="hidden sm:block flex-1 max-w-xl min-w-0">
                 <div className="relative">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                     <input
@@ -33,7 +41,7 @@ const Header = () => {
                 </div>
             </div>
 
-            <div className="flex items-center gap-4 ml-4">
+            <div className="flex items-center gap-2 sm:gap-4 ml-auto">
                 <div className="relative">
                     <button
                         onClick={() => {
@@ -49,7 +57,7 @@ const Header = () => {
                     {showNotifications && (
                         <>
                             <div className="fixed inset-0 z-10" onClick={() => setShowNotifications(false)}></div>
-                            <div className="absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-20">
+                            <div className="absolute right-0 mt-2 w-[calc(100vw-2rem)] max-w-sm sm:w-80 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-20 overflow-hidden">
                                 <div className="px-4 py-2 border-b border-gray-50">
                                     <h3 className="font-semibold text-gray-900">Notifications</h3>
                                 </div>
@@ -84,7 +92,7 @@ const Header = () => {
                         <div className="w-8 h-8 bg-gradient-to-br from-brand-100 to-teal-50 rounded-full flex items-center justify-center text-brand-600 shadow-inner">
                             <User className="w-5 h-5" />
                         </div>
-                        <span className="text-sm font-medium text-gray-700">{user?.username || 'User'}</span>
+                        <span className="hidden sm:block text-sm font-medium text-gray-700">{user?.username || 'User'}</span>
                         <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform ${showProfileMenu ? 'rotate-180' : ''}`} />
                     </button>
 

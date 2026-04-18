@@ -84,11 +84,11 @@ const Dashboard = () => {
 
     return (
         <div className="space-y-6">
-            <div className="flex items-center justify-between animate-fade-in">
+            <div className="flex flex-wrap items-center justify-between gap-3 animate-fade-in">
                 <h2 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-surface-900 to-surface-600">My Files</h2>
                 <button
                     onClick={() => setIsUploadModalOpen(true)}
-                    className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-brand-600 to-teal-500 text-white font-medium rounded-xl hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300"
+                    className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-2.5 bg-gradient-to-r from-brand-600 to-teal-500 text-white font-medium rounded-xl hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300"
                 >
                     <Plus className="w-5 h-5" />
                     Upload File

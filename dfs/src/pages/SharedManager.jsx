@@ -66,7 +66,7 @@ const SharedManager = () => {
             </div>
 
             {/* Tabs */}
-            <div className="flex space-x-2 bg-surface-100/50 p-1.5 rounded-xl w-fit backdrop-blur-sm border border-surface-200/50">
+            <div className="flex space-x-2 bg-surface-100/50 p-1.5 rounded-xl w-full sm:w-fit overflow-x-auto backdrop-blur-sm border border-surface-200/50">
                 <button
                     onClick={() => setActiveTab('my_shares')}
                     className={`px-5 py-2.5 text-sm font-semibold rounded-lg transition-all duration-200 ${activeTab === 'my_shares'
@@ -88,17 +88,18 @@ const SharedManager = () => {
             </div>
 
             <div className="glass-card rounded-2xl overflow-hidden animate-slide-up">
-                <table className="min-w-full divide-y divide-surface-200">
+                <div className="overflow-x-auto">
+                    <table className="w-full divide-y divide-surface-200">
                     <thead className="bg-surface-50/80">
                         <tr>
-                            <th className="px-6 py-4 text-left text-xs font-bold text-surface-500 uppercase tracking-widest">File Name</th>
+                            <th className="px-3 sm:px-6 py-4 text-left text-xs font-bold text-surface-500 uppercase tracking-widest">File Name</th>
                             {activeTab === 'shared_with_me' && (
-                                <th className="px-6 py-4 text-left text-xs font-bold text-surface-500 uppercase tracking-widest">Shared By</th>
+                                <th className="hidden sm:table-cell px-6 py-4 text-left text-xs font-bold text-surface-500 uppercase tracking-widest">Shared By</th>
                             )}
-                            <th className="px-6 py-4 text-left text-xs font-bold text-surface-500 uppercase tracking-widest">
+                            <th className="hidden md:table-cell px-6 py-4 text-left text-xs font-bold text-surface-500 uppercase tracking-widest">
                                 {activeTab === 'my_shares' ? 'Shared With' : 'Shared On'}
                             </th>
-                            <th className="px-6 py-4 text-left text-xs font-bold text-surface-500 uppercase tracking-widest">
+                            <th className="hidden lg:table-cell px-6 py-4 text-left text-xs font-bold text-surface-500 uppercase tracking-widest">
                                 {activeTab === 'my_shares' ? 'Recent Access' : ''}
                             </th>
                             <th className="px-6 py-4 text-right text-xs font-bold text-surface-500 uppercase tracking-widest">Actions</th>
@@ -114,23 +115,23 @@ const SharedManager = () => {
                         )}
                         {activeTab === 'my_shares' && myShares.map((file) => (
                             <tr key={`my-${file.id}`} className="hover:bg-brand-50/30 transition-colors">
-                                <td className="px-6 py-5 whitespace-nowrap">
+                                <td className="px-3 sm:px-6 py-5 whitespace-nowrap overflow-hidden text-ellipsis max-w-[200px] sm:max-w-none">
                                     <div className="flex items-center">
-                                        <div className="flex-shrink-0 h-10 w-10 bg-gradient-to-br from-brand-100 to-brand-50 rounded-xl flex items-center justify-center text-brand-600 shadow-inner border border-brand-200/50">
-                                            <FileText className="w-5 h-5 drop-shadow-sm" />
+                                        <div className="flex-shrink-0 h-8 w-8 sm:h-10 sm:w-10 bg-gradient-to-br from-brand-100 to-brand-50 rounded-xl flex items-center justify-center text-brand-600 shadow-inner border border-brand-200/50">
+                                            <FileText className="w-4 h-4 sm:w-5 sm:h-5 drop-shadow-sm" />
                                         </div>
-                                        <div className="ml-4">
-                                            <div className="text-sm font-bold text-surface-900">{file.name}</div>
+                                        <div className="ml-3 sm:ml-4 overflow-hidden">
+                                            <div className="text-sm font-bold text-surface-900 truncate">{file.name}</div>
                                         </div>
                                     </div>
                                 </td>
-                                <td className="px-6 py-5 whitespace-nowrap">
+                                <td className="hidden sm:table-cell px-6 py-5 whitespace-nowrap">
                                     <div className="text-sm font-medium text-surface-700 flex items-center gap-2">
                                         <User className="w-4 h-4 text-surface-400" />
                                         {file.sharedWith.length > 0 ? <span className="px-2 py-0.5 bg-surface-100 rounded-md">{file.sharedWith.length} people</span> : 'No invites'}
                                     </div>
                                 </td>
-                                <td className="px-6 py-5 whitespace-nowrap">
+                                <td className="hidden md:table-cell px-6 py-5 whitespace-nowrap">
                                     <div className="flex items-center text-sm font-medium text-surface-500">
                                         <Clock className="flex-shrink-0 mr-2 h-4 w-4 text-surface-400" />
                                         {new Date(file.lastAccess).toLocaleDateString()}
@@ -153,18 +154,18 @@ const SharedManager = () => {
                         )}
                         {activeTab === 'shared_with_me' && sharedWithMe.map((file) => (
                             <tr key={`swm-${file.id}`} className="hover:bg-teal-50/30 transition-colors">
-                                <td className="px-6 py-5 whitespace-nowrap">
+                                <td className="px-3 sm:px-6 py-5 whitespace-nowrap overflow-hidden text-ellipsis max-w-[200px] sm:max-w-none">
                                     <div className="flex items-center">
-                                        <div className="flex-shrink-0 h-10 w-10 bg-gradient-to-br from-teal-100 to-teal-50 rounded-xl flex items-center justify-center text-teal-600 shadow-inner border border-teal-200/50">
-                                            <FileText className="w-5 h-5 drop-shadow-sm" />
+                                        <div className="flex-shrink-0 h-8 w-8 sm:h-10 sm:w-10 bg-gradient-to-br from-teal-100 to-teal-50 rounded-xl flex items-center justify-center text-teal-600 shadow-inner border border-teal-200/50">
+                                            <FileText className="w-4 h-4 sm:w-5 sm:h-5 drop-shadow-sm" />
                                         </div>
-                                        <div className="ml-4">
-                                            <div className="text-sm font-bold text-surface-900">{file.name}</div>
-                                            <div className="text-xs font-semibold text-surface-500 mt-1">{formatSize(file.size)}</div>
+                                        <div className="ml-3 sm:ml-4 overflow-hidden">
+                                            <div className="text-sm font-bold text-surface-900 truncate">{file.name}</div>
+                                            <div className="text-xs font-semibold text-surface-500 mt-0.5 sm:mt-1">{formatSize(file.size)}</div>
                                         </div>
                                     </div>
                                 </td>
-                                <td className="px-6 py-5 whitespace-nowrap">
+                                <td className="hidden sm:table-cell px-6 py-5 whitespace-nowrap">
                                     <div className="flex items-center gap-3">
                                         <div className="w-8 h-8 rounded-full bg-gradient-to-br from-brand-100 to-brand-50 text-brand-700 flex items-center justify-center text-xs font-bold uppercase shadow-sm border border-brand-200/50">
                                             {file.sharedBy.substring(0, 2)}
@@ -172,7 +173,7 @@ const SharedManager = () => {
                                         <div className="text-sm font-medium text-surface-900">{file.sharedBy}</div>
                                     </div>
                                 </td>
-                                <td className="px-6 py-5 whitespace-nowrap">
+                                <td className="hidden md:table-cell px-6 py-5 whitespace-nowrap">
                                     <div className="flex items-center text-sm font-medium text-surface-500">
                                         <Clock className="flex-shrink-0 mr-2 h-4 w-4 text-surface-400" />
                                         {new Date(file.sharedAt).toLocaleDateString()}
@@ -190,7 +191,8 @@ const SharedManager = () => {
                             </tr>
                         ))}
                     </tbody>
-                </table>
+                    </table>
+                </div>
             </div>
         </div>
     );

@@ -11,7 +11,7 @@ const FileCard = ({ file, onShare, onDownload, onDelete, onToggleStar, onRestore
 
     return (
         <div className="bg-gradient-to-br from-white to-surface-50 p-5 rounded-2xl border border-surface-200 hover:shadow-xl hover:border-brand-300 hover:-translate-y-1 transition-all duration-300 group relative">
-            <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+            <div className="absolute top-3 right-3 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity z-10">
                 {!isTrashView && (
                     <button
                         onClick={() => onToggleStar && onToggleStar(file)}

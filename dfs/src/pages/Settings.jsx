@@ -62,7 +62,7 @@ const Settings = () => {
             {/* Profile Section */}
             <div className="glass-card rounded-2xl overflow-hidden animate-slide-up">
                 <div className="p-8 border-b border-surface-200/50">
-                    <div className="flex items-center gap-6">
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6">
                         <div className="w-20 h-20 bg-gradient-to-br from-brand-100 to-brand-50 rounded-2xl flex items-center justify-center text-brand-600 text-3xl font-bold uppercase shadow-inner border border-brand-200/50">
                             {user?.username ? user.username.substring(0, 2) : 'U'}
                         </div>
@@ -70,7 +70,7 @@ const Settings = () => {
                             <h3 className="text-2xl font-bold text-surface-900">{user?.username || 'User'}</h3>
                             <p className="text-sm font-medium text-surface-500 mt-1">{user?.email || 'user@example.com'}</p>
                         </div>
-                        <button className="ml-auto px-6 py-2.5 bg-white border border-surface-200 rounded-xl text-sm font-semibold text-surface-700 hover:bg-surface-50 hover:border-surface-300 transition-all shadow-sm">
+                        <button className="sm:ml-auto w-full sm:w-auto px-6 py-2.5 bg-white border border-surface-200 rounded-xl text-sm font-semibold text-surface-700 hover:bg-surface-50 hover:border-surface-300 transition-all shadow-sm">
                             Edit Profile
                         </button>
                     </div>
@@ -87,12 +87,12 @@ const Settings = () => {
                         Account Preferences
                     </h3>
                     <div className="space-y-6">
-                        <div className="flex items-center justify-between">
+                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                             <div>
                                 <p className="font-semibold text-surface-800">Language</p>
                                 <p className="text-sm font-medium text-surface-500">Select your preferred language</p>
                             </div>
-                            <select className="px-4 py-2 border-surface-200 bg-white/50 backdrop-blur-sm rounded-xl text-sm font-medium focus:ring-brand-500 focus:border-brand-500 shadow-sm">
+                            <select className="w-full sm:w-auto px-4 py-2 border-surface-200 bg-white/50 backdrop-blur-sm rounded-xl text-sm font-medium focus:ring-brand-500 focus:border-brand-500 shadow-sm">
                                 <option>English (US)</option>
                                 <option>Spanish</option>
                                 <option>French</option>
@@ -109,7 +109,7 @@ const Settings = () => {
                         </div>
                         Notifications
                     </h3>
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-center justify-between gap-3">
                         <div>
                             <p className="font-semibold text-surface-800">Email Notifications</p>
                             <p className="text-sm font-medium text-surface-500">Receive updates about your file activity</p>
@@ -132,7 +132,7 @@ const Settings = () => {
                         Security
                     </h3>
                     <div className="space-y-6">
-                        <div className="flex items-center justify-between">
+                        <div className="flex items-center justify-between gap-3">
                             <div>
                                 <p className="font-semibold text-surface-800">Two-Factor Authentication</p>
                                 <p className="text-sm font-medium text-surface-500">Add an extra layer of security to your account</p>
@@ -144,12 +144,12 @@ const Settings = () => {
                                 <span className={`pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow-sm ring-0 transition duration-300 ease-in-out ${twoFactor ? 'translate-x-5' : 'translate-x-0'}`} />
                             </button>
                         </div>
-                        <div className="flex items-center justify-between pt-6 border-t border-surface-100/50">
+                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pt-6 border-t border-surface-100/50">
                             <div>
                                 <p className="font-semibold text-surface-800">Change Password</p>
                                 <p className="text-sm font-medium text-surface-500">Update your password regularly</p>
                             </div>
-                            <button className="px-6 py-2.5 bg-white border border-surface-200 rounded-xl text-sm font-semibold text-surface-700 hover:bg-surface-50 hover:border-surface-300 transition-all shadow-sm">
+                            <button className="w-full sm:w-auto px-6 py-2.5 bg-white border border-surface-200 rounded-xl text-sm font-semibold text-surface-700 hover:bg-surface-50 hover:border-surface-300 transition-all shadow-sm">
                                 Update
                             </button>
                         </div>
@@ -164,7 +164,7 @@ const Settings = () => {
                         </div>
                         Appearance
                     </h3>
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-center justify-between gap-3">
                         <div>
                             <p className="font-semibold text-surface-800">Dark Mode</p>
                             <p className="text-sm font-medium text-surface-500">Switch between light and dark themes</p>
