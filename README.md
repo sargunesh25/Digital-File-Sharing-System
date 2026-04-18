@@ -6,7 +6,7 @@ A modern, fast, and secure web application for sharing files directly between de
 
 This project consists of two main components:
 1.  **Frontend (`/dfs`)**: A React application built with Vite, Tailwind CSS, and Socket.IO client.
-2.  **Backend (`/backend`)**: A Node.js/Express server providing REST APIs, WebSocket signaling (Socket.IO) for WebRTC, and file storage, backed by a MySQL database using Sequelize ORM.
+2.  **Backend (`/backend`)**: A Node.js/Express server providing REST APIs, WebSocket signaling (Socket.IO) for WebRTC, and file storage, backed by a PostgreSQL database using Sequelize ORM.
 
 ## Key Features
 
@@ -23,7 +23,7 @@ This project consists of two main components:
 ### Prerequisites
 
 *   **Node.js** (v18+ recommended)
-*   **MySQL Server** running locally or remotely
+*   **PostgreSQL Server** running locally or remotely
 
 ### Installation
 
@@ -53,15 +53,20 @@ This project consists of two main components:
     PORT=5000
     JWT_SECRET=your_super_secret_key
     DB_HOST=127.0.0.1
-    DB_PORT=3306
-    DB_USER=root
-    DB_PASSWORD=your_mysql_password
-    DB_NAME=dfs_dev
-    DB_DIALECT=mysql
+    DB_PORT=5432
+    DB_USER=your_pg_user
+    DB_PASSWORD=your_pg_password
+    DB_NAME=dfs
+    DB_DIALECT=postgres
     ```
 
 2.  **Database Setup:**
-    The backend uses Sequelize to automatically synchronize the models with the database on startup. Ensure you have created a database named `dfs_dev` (or whatever you configured in the `.env`) in your MySQL server before starting the app.
+    The backend uses Sequelize to synchronize models and apply migrations. Ensure the target PostgreSQL database exists before starting the app.
+
+3.  **Run Database Migrations:**
+    ```bash
+    npm run migrate
+    ```
 
 ### Running the Application
 
@@ -87,6 +92,41 @@ To run the full stack locally:
 ---
 
 ## 🛠 GitHub Workflow & Contribution Guide
+
+## Render Deployment (Backend + Frontend)
+
+### Backend Render service environment variables
+
+Set these values in your backend Render service:
+
+```env
+NODE_ENV=production
+PORT=5000
+JWT_SECRET=your_super_secret_key
+DB_HOST=dpg-d7hgchugvqtc738lu2bg-a.oregon-postgres.render.com
+DB_PORT=5432
+DB_USER=dfs_user
+DB_PASSWORD=your_new_render_db_password
+DB_NAME=dfs
+DB_DIALECT=postgres
+BACKEND_PUBLIC_URL=https://your-backend-service.onrender.com
+FRONTEND_URL=https://your-frontend-domain.com
+```
+
+### Frontend Render service environment variables
+
+Set this value in your frontend Render static web service:
+
+```env
+VITE_BACKEND_URL=https://your-backend-service.onrender.com
+```
+
+### Deployment notes
+
+1. Run backend migrations after setting environment variables.
+2. Redeploy backend service.
+3. Redeploy frontend service so it uses `VITE_BACKEND_URL`.
+4. Verify `https://your-backend-service.onrender.com/` and `/api-docs` are reachable.
 
 This project follows a standard Git workflow. Whether you are fixing a bug or developing a new feature, please follow these steps:
 

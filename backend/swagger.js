@@ -1,4 +1,5 @@
 const swaggerJSDoc = require('swagger-jsdoc');
+const BASE_URL = process.env.BACKEND_PUBLIC_URL || 'http://localhost:5000';
 
 const json = (schema) => ({
   content: {
@@ -14,7 +15,7 @@ const options = {
       version: '1.0.0',
       description: 'API documentation for auth, users, files, and transfers.'
     },
-    servers: [{ url: 'http://localhost:5000' }],
+    servers: [{ url: BASE_URL }],
     tags: [
       { name: 'Health' },
       { name: 'Auth' },
