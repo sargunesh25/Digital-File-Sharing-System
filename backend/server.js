@@ -82,6 +82,7 @@ const authRoutes = require('./routers/auth.routes');
 const fileRoutes = require('./routers/file.routes');
 const userRoutes = require('./routers/user.routes');
 const transferRoutes = require('./routers/transfer.routes');
+const notificationRoutes = require('./routers/notification.routes');
 const swaggerSpec = require('./swagger');
 
 // Middleware
@@ -105,6 +106,10 @@ app.use('/api/auth', authRoutes);
 app.use('/api/files', fileRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/transfers', transferRoutes);
+app.use('/api/notifications', notificationRoutes);
+
+// Save io instance to app for controllers to use
+app.set('io', io);
 
 const db = require('./models');
 
@@ -125,6 +130,14 @@ function generateRoomCode() {
 
 io.on('connection', (socket) => {
     console.log(`[Socket] Peer connected: ${socket.id}`);
+
+    // Authenticate user to join their personal room for notifications
+    socket.on('authenticate-user', (data) => {
+        if (data && data.userId) {
+            socket.join(`user-${data.userId}`);
+            console.log(`[Socket] User ${data.userId} joined private room user-${data.userId}`);
+        }
+    });
 
     // Create a new room
     socket.on('create-room', (data, callback) => {

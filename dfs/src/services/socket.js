@@ -33,6 +33,7 @@ class SignalingService {
             this.socket.on('offer', (data) => this._emit('offer', data));
             this.socket.on('answer', (data) => this._emit('answer', data));
             this.socket.on('ice-candidate', (data) => this._emit('ice-candidate', data));
+            this.socket.on('new-notification', (data) => this._emit('new-notification', data));
         }
 
         this.connectPromise = new Promise((resolve, reject) => {
@@ -143,6 +144,16 @@ class SignalingService {
     _emit(event, data) {
         if (this.callbacks[event]) {
             this.callbacks[event].forEach(cb => cb(data));
+        }
+    }
+
+    authenticate(userId) {
+        if (this.socket?.connected) {
+            this.socket.emit('authenticate-user', { userId });
+        } else {
+            this.connect().then(() => {
+                this.socket.emit('authenticate-user', { userId });
+            }).catch(console.error);
         }
     }
 

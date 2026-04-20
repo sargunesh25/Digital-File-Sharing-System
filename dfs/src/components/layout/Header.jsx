@@ -1,24 +1,72 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Search, Bell, User, Settings, LogOut, ChevronDown, Menu } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import api from '../../api/axios';
+import signalingService from '../../services/socket';
 
 const Header = ({ onToggleSidebar = () => {} }) => {
     const [showNotifications, setShowNotifications] = useState(false);
     const [showProfileMenu, setShowProfileMenu] = useState(false);
+    const [notifications, setNotifications] = useState([]);
     const { user, logout } = useAuth();
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if (!user) return;
+
+        // Fetch historical notifications
+        const fetchNotifications = async () => {
+            try {
+                const response = await api.get('/notifications');
+                setNotifications(response.data);
+            } catch (err) {
+                console.error('Error fetching notifications:', err);
+            }
+        };
+
+        fetchNotifications();
+
+        // Authenticate socket to join personal room for real-time notifications
+        signalingService.authenticate(user.id);
+
+        const handleNewNotification = (notif) => {
+            setNotifications(prev => [notif, ...prev]);
+        };
+
+        signalingService.on('new-notification', handleNewNotification);
+
+        return () => {
+            signalingService.off('new-notification', handleNewNotification);
+        };
+    }, [user]);
 
     const handleLogout = () => {
         logout();
         navigate('/login');
     };
 
-    const notifications = [
-        { id: 1, text: 'Alice shared "Project Requirements.pdf"', time: '2 mins ago', read: false },
-        { id: 2, text: 'You were mentioned in a comment', time: '1 hour ago', read: false },
-        { id: 3, text: 'Storage is 80% full', time: '1 day ago', read: true },
-    ];
+    const handleMarkAllAsRead = async () => {
+        try {
+            await api.put('/notifications/read-all');
+            setNotifications(prev => prev.map(n => ({ ...n, read: true })));
+        } catch (err) {
+            console.error('Failed to mark notifications as read', err);
+        }
+    };
+
+    const handleNotificationClick = async (notif) => {
+        if (!notif.read) {
+            try {
+                await api.put(`/notifications/${notif.id}/read`);
+                setNotifications(prev => prev.map(n => n.id === notif.id ? { ...n, read: true } : n));
+            } catch (err) {
+                console.error('Failed to mark as read', err);
+            }
+        }
+    };
+
+    const unreadCount = notifications.filter(n => !n.read).length;
 
     return (
         <header className="h-20 glass flex items-center justify-between px-4 sm:px-6 z-30 sticky top-0 transition-all duration-300 gap-4 mb-6 shadow-sm border-b border-white/50">
@@ -51,7 +99,9 @@ const Header = ({ onToggleSidebar = () => {} }) => {
                         className="p-2.5 text-surface-600 hover:text-brand-600 hover:bg-white/80 rounded-xl relative transition-all shadow-sm bg-white/50 border border-white/60 hover:shadow-md hover:-translate-y-0.5"
                     >
                         <Bell className="w-5 h-5" />
-                        <span className="absolute top-2 right-2 w-2.5 h-2.5 bg-accent-500 rounded-full border-2 border-white shadow-sm"></span>
+                        {unreadCount > 0 && (
+                            <span className="absolute top-2 right-2 w-2.5 h-2.5 bg-accent-500 rounded-full border-2 border-white shadow-sm"></span>
+                        )}
                     </button>
 
                     {showNotifications && (
@@ -60,21 +110,35 @@ const Header = ({ onToggleSidebar = () => {} }) => {
                             <div className="absolute right-0 mt-3 w-[calc(100vw-2rem)] max-w-sm sm:w-80 glass-strong rounded-2xl shadow-xl py-2 z-20 overflow-hidden animate-slide-up transform origin-top-right">
                                 <div className="px-5 py-3 border-b border-surface-200/50 flex justify-between items-center">
                                     <h3 className="font-semibold text-surface-900">Notifications</h3>
-                                    <span className="text-xs bg-brand-100 text-brand-700 px-2 py-0.5 rounded-full font-medium">3 New</span>
+                                    {unreadCount > 0 && (
+                                        <span className="text-xs bg-brand-100 text-brand-700 px-2 py-0.5 rounded-full font-medium">{unreadCount} New</span>
+                                    )}
                                 </div>
                                 <div className="max-h-96 overflow-y-auto custom-scrollbar">
-                                    {notifications.map((notif) => (
-                                        <div key={notif.id} className={`px-5 py-3 hover:bg-surface-50/80 cursor-pointer transition-colors border-l-2 ${!notif.read ? 'border-brand-500 bg-brand-50/30' : 'border-transparent'}`}>
-                                            <p className="text-sm text-surface-800 font-medium">{notif.text}</p>
-                                            <p className="text-xs text-surface-500 mt-1.5">{notif.time}</p>
+                                    {notifications.length === 0 ? (
+                                        <div className="px-5 py-6 text-center text-surface-500 text-sm">
+                                            No notifications yet.
                                         </div>
-                                    ))}
+                                    ) : (
+                                        notifications.map((notif) => (
+                                            <div 
+                                                key={notif.id} 
+                                                onClick={() => handleNotificationClick(notif)}
+                                                className={`px-5 py-3 hover:bg-surface-50/80 cursor-pointer transition-colors border-l-2 ${!notif.read ? 'border-brand-500 bg-brand-50/30' : 'border-transparent'}`}
+                                            >
+                                                <p className="text-sm text-surface-800 font-medium">{notif.text}</p>
+                                                <p className="text-xs text-surface-500 mt-1.5">{new Date(notif.createdAt).toLocaleString()}</p>
+                                            </div>
+                                        ))
+                                    )}
                                 </div>
-                                <div className="px-5 py-3 border-t border-surface-200/50 text-center bg-surface-50/50 mt-1">
-                                    <button className="text-xs text-brand-600 font-semibold hover:text-brand-800 transition-colors uppercase tracking-wider">
-                                        Mark all as read
-                                    </button>
-                                </div>
+                                {notifications.length > 0 && (
+                                    <div className="px-5 py-3 border-t border-surface-200/50 text-center bg-surface-50/50 mt-1">
+                                        <button onClick={handleMarkAllAsRead} className="text-xs text-brand-600 font-semibold hover:text-brand-800 transition-colors uppercase tracking-wider">
+                                            Mark all as read
+                                        </button>
+                                    </div>
+                                )}
                             </div>
                         </>
                     )}

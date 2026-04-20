@@ -243,6 +243,9 @@ exports.shareFile = async (req, res) => {
         let sharedCount = 0;
 
         if (invites && invites.length > 0) {
+            const sender = await db.User.findByPk(req.user.id);
+            const senderName = sender ? sender.username || sender.email : 'A user';
+
             for (const invite of invites) {
                 const invitedUser = await db.User.findOne({ where: { email: invite.email } });
                 if (invitedUser) {
@@ -253,6 +256,25 @@ exports.shareFile = async (req, res) => {
                         token: null, // No longer using tokens for direct shares
                         expiresAt: expiresAt
                     });
+
+                    // Create Notification
+                    try {
+                        const { createNotification } = require('./notification.controller');
+                        const notif = await createNotification(
+                            invitedUser.id,
+                            `${senderName} shared "${file.filename}" with you.`,
+                            'SHARE'
+                        );
+
+                        // Broadcast Real-time Notification
+                        const io = req.app.get('io');
+                        if (io && notif) {
+                            io.to(`user-${invitedUser.id}`).emit('new-notification', notif);
+                        }
+                    } catch (err) {
+                        console.error('Failed to send real-time notification:', err);
+                    }
+
                     sharedCount++;
                 }
             }
