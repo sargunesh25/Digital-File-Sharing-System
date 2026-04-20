@@ -83,6 +83,7 @@ const fileRoutes = require('./routers/file.routes');
 const userRoutes = require('./routers/user.routes');
 const transferRoutes = require('./routers/transfer.routes');
 const notificationRoutes = require('./routers/notification.routes');
+const groupRoutes = require('./routers/group.routes');
 const swaggerSpec = require('./swagger');
 
 // Middleware
@@ -107,6 +108,7 @@ app.use('/api/files', fileRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/transfers', transferRoutes);
 app.use('/api/notifications', notificationRoutes);
+app.use('/api/groups', groupRoutes);
 
 // Save io instance to app for controllers to use
 app.set('io', io);

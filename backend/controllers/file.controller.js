@@ -212,7 +212,7 @@ exports.downloadFile = async (req, res) => {
 
 exports.shareFile = async (req, res) => {
     try {
-        const { fileId, accessType, invites, expiresIn } = req.body;
+        const { fileId, accessType, invites, expiresIn, message } = req.body;
         const file = await File.findOne({
             where: { id: fileId, userId: req.user.id }
         });
@@ -260,9 +260,14 @@ exports.shareFile = async (req, res) => {
                     // Create Notification
                     try {
                         const { createNotification } = require('./notification.controller');
+                        let notifyText = `${senderName} shared "${file.filename}" with you.`;
+                        if (message && message.trim().length > 0) {
+                            notifyText += ` Message: "${message.trim()}"`;
+                        }
+
                         const notif = await createNotification(
                             invitedUser.id,
-                            `${senderName} shared "${file.filename}" with you.`,
+                            notifyText,
                             'SHARE'
                         );
 

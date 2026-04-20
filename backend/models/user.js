@@ -14,6 +14,7 @@ module.exports = (sequelize, DataTypes) => {
       User.hasMany(models.File, { foreignKey: 'userId', as: 'files' });
       User.hasMany(models.FileShare, { foreignKey: 'userId', as: 'sharedFiles' });
       User.hasMany(models.Notification, { foreignKey: 'userId', as: 'notifications' });
+      User.belongsToMany(models.Group, { through: 'GroupMembers', foreignKey: 'userId', as: 'userGroups' });
     }
   }
   User.init({
