@@ -232,17 +232,17 @@ const ShareModal = ({ isOpen, onClose, file }) => {
                         {invitedUsers.length > 0 && (
                             <div className="mt-4 p-4 border border-surface-200 rounded-xl bg-surface-50/50 space-y-3">
                                 {invitedUsers.map((user, index) => (
-                                    <div key={index} className="flex items-center justify-between pb-3 border-b border-surface-200/60 last:border-0 last:pb-0">
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-brand-400 to-brand-600 flex items-center justify-center text-white font-bold uppercase text-sm shadow-sm opacity-90">
+                                    <div key={index} className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-0 pb-3 border-b border-surface-200/60 last:border-0 last:pb-0">
+                                        <div className="flex items-center gap-3 min-w-0">
+                                            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-brand-400 to-brand-600 flex items-center justify-center text-white font-bold uppercase text-sm shadow-sm opacity-90 shrink-0">
                                                 {user.username ? user.username.substring(0, 2) : 'U'}
                                             </div>
-                                            <div>
-                                                <p className="text-sm font-semibold text-surface-800">{user.username}</p>
-                                                <p className="text-xs text-surface-500">{user.email}</p>
+                                            <div className="min-w-0 flex-1">
+                                                <p className="text-sm font-semibold text-surface-800 truncate">{user.username}</p>
+                                                <p className="text-xs text-surface-500 truncate">{user.email}</p>
                                             </div>
                                         </div>
-                                        <div className="flex items-center gap-3">
+                                        <div className="flex items-center justify-between sm:justify-end gap-3 pl-11 sm:pl-0 w-full sm:w-auto">
                                             <div className="relative">
                                                 <button
                                                     onClick={() => setOpenPermissionDropdown(openPermissionDropdown === index ? null : index)}
@@ -293,20 +293,22 @@ const ShareModal = ({ isOpen, onClose, file }) => {
                                                 Save as a named Group
                                             </button>
                                         ) : (
-                                            <div className="flex items-center gap-2 w-full max-w-sm animate-fade-in">
+                                            <div className="flex flex-col sm:flex-row sm:items-center gap-2 w-full sm:max-w-sm animate-fade-in">
                                                 <input 
                                                     type="text" 
                                                     placeholder="Enter group name..." 
                                                     value={newGroupName}
                                                     onChange={e => setNewGroupName(e.target.value)}
-                                                    className="flex-1 px-3 py-1.5 text-sm border border-surface-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:outline-none shadow-inner"
+                                                    className="w-full sm:flex-1 px-3 py-2 sm:py-1.5 text-sm border border-surface-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:outline-none shadow-inner"
                                                 />
-                                                <button onClick={handleSaveGroup} className="bg-accent-600 text-white px-3 py-1.5 rounded-lg text-sm font-semibold hover:bg-accent-700 shadow-sm transition-colors">
-                                                    Save
-                                                </button>
-                                                <button onClick={() => setIsSavingGroup(false)} className="px-2 py-1.5 text-surface-500 hover:bg-surface-200 rounded-lg">
-                                                    <X className="w-4 h-4" />
-                                                </button>
+                                                <div className="flex items-center justify-end gap-2">
+                                                    <button onClick={handleSaveGroup} className="flex-1 sm:flex-none bg-accent-600 text-white px-4 sm:px-3 py-2 sm:py-1.5 rounded-lg text-sm font-semibold hover:bg-accent-700 shadow-sm transition-colors">
+                                                        Save
+                                                    </button>
+                                                    <button onClick={() => setIsSavingGroup(false)} className="px-3 sm:px-2 py-2 sm:py-1.5 text-surface-500 hover:bg-surface-200 rounded-lg">
+                                                        <X className="w-4 h-4" />
+                                                    </button>
+                                                </div>
                                             </div>
                                         )}
                                     </div>
