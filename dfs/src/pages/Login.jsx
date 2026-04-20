@@ -19,15 +19,12 @@ const Login = () => {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-surface-50 to-brand-50 py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
-            {/* Decorative Background Elements */}
-            <div className="absolute top-0 left-0 w-96 h-96 bg-brand-300/30 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob"></div>
-            <div className="absolute top-0 right-0 w-96 h-96 bg-teal-300/30 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob animation-delay-2000"></div>
-            <div className="absolute -bottom-8 left-20 w-96 h-96 bg-blue-300/30 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob animation-delay-4000"></div>
+        <div className="min-h-screen flex items-center justify-center bg-mesh bg-surface-50 py-12 px-4 sm:px-6 lg:px-8 z-0 relative">
+            <div className="bg-mesh-blob-3"></div>
 
-            <div className="max-w-md w-full glass-card p-10 rounded-2xl space-y-8 relative z-10 animate-fade-in shadow-xl">
+            <div className="max-w-md w-full glass-strong p-10 rounded-3xl space-y-8 relative z-10 animate-fade-in shadow-xl border border-white/60">
                 <div>
-                    <h2 className="mt-2 text-center text-4xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-brand-600 to-teal-500">
+                    <h2 className="mt-2 text-center text-4xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-brand-600 to-accent-500">
                         Sign in to your account
                     </h2>
                     <p className="mt-4 text-center text-sm text-surface-600">
@@ -97,7 +94,7 @@ const Login = () => {
                     <div>
                         <button
                             type="submit"
-                            className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-semibold rounded-xl text-white bg-gradient-to-r from-brand-600 to-teal-500 hover:from-brand-500 hover:to-teal-400 shadow-md hover:shadow-lg hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500 transition-all duration-200 overflow-hidden"
+                            className="group relative w-full flex justify-center py-3.5 px-4 text-sm font-semibold rounded-2xl text-white bg-gradient-to-r from-brand-600 to-accent-500 hover:shadow-glow hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500 transition-all duration-300 overflow-hidden"
                         >
                             Sign in
                         </button>

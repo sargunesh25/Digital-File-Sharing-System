@@ -84,18 +84,20 @@ const Dashboard = () => {
 
     return (
         <div className="space-y-6">
-            <div className="flex flex-wrap items-center justify-between gap-3 animate-fade-in">
-                <h2 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-surface-900 to-surface-600">My Files</h2>
+            <div className="flex flex-wrap items-center justify-between gap-3 animate-fade-in mb-8">
+                <h2 className="text-3xl font-bold tracking-tight text-surface-900">
+                    My Files
+                </h2>
                 <button
                     onClick={() => setIsUploadModalOpen(true)}
-                    className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-2.5 bg-gradient-to-r from-brand-600 to-teal-500 text-white font-medium rounded-xl hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300"
+                    className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-brand-500 to-accent-500 text-white font-semibold rounded-2xl hover:shadow-glow hover:-translate-y-1 transition-all duration-300 transform group"
                 >
-                    <Plus className="w-5 h-5" />
+                    <Plus className="w-5 h-5 group-hover:rotate-90 transition-transform duration-300 text-white" />
                     Upload File
                 </button>
             </div>
 
-            <div className="glass-card p-6 sm:p-8 rounded-2xl animate-slide-up">
+            <div className="glass-strong p-6 sm:p-8 rounded-3xl animate-slide-up">
                 <FileList
                     files={files}
                     onShare={handleShare}
